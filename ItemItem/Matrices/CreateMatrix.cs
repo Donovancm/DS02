@@ -55,7 +55,6 @@ namespace ItemItem.Matrices
                     }
                     
                 }
-
             }
             CalculateAverageRating(matrix);
             return matrix;

@@ -47,7 +47,8 @@ namespace ItemItem
         };
             Dictionary<int, double[,]> dictionaryBasic = FileReader.GetData(data);
             var itemList = FileReader.GetItemList(data);
-            Matrices.CreateMatrix.Create(itemList, dictionaryBasic);
+            var matrix = Matrices.CreateMatrix.Create(itemList, dictionaryBasic);
+            Formulas.Cosinus.ACS(matrix,103,104,itemList);
         }
     }
 }
