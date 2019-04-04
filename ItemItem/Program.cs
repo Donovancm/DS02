@@ -49,6 +49,9 @@ namespace ItemItem
             var itemList = FileReader.GetItemList(data);
             var matrix = Matrices.CreateMatrix.Create(itemList, dictionaryBasic);
             Formulas.Cosinus.ACS(matrix,103,104,itemList);
+            Formulas.Deviations.CreateDeviationMatrix(itemList, matrix);
+            var devMatrixS = Formulas.Deviations.devMatrixSimilarity;
+            var devMatrixU = Formulas.Deviations.devMatrixUserAmount;
         }
     }
 }
