@@ -52,6 +52,8 @@ namespace ItemItem
             Formulas.Deviations.CreateDeviationMatrix(itemList, matrix);
             var devMatrixS = Formulas.Deviations.devMatrixSimilarity;
             var devMatrixU = Formulas.Deviations.devMatrixUserAmount;
+            var normalizeMatrixRating = Formulas.Normalization.NormalizedMatrix(matrix);
+            Formulas.Prediction.CalculatePrediction(devMatrixS, normalizeMatrixRating, 101, itemList, 1);
         }
     }
 }
