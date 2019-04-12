@@ -22,7 +22,7 @@ namespace ItemItem.Formulas
                 }
             }
             prediction = upper / lower;
-            double r = ((prediction + 1) / 2) * (normalizationMatrix[userID - 1, 9] - normalizationMatrix[userID - 1, 8]) + 1;
+            double r = ((prediction + 1) / 2) * (normalizationMatrix[userID - 1, normalizationMatrix.GetLength(1)-1] - normalizationMatrix[userID - 1, normalizationMatrix.GetLength(1)-2]) + 1;
             Console.ReadLine();
             Console.WriteLine("Pred: " + r);
             return r;

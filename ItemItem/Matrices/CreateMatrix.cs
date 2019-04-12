@@ -38,7 +38,7 @@ namespace ItemItem.Matrices
                     for (int a = 0; a <= itemList.Length - 1; a++)
                     {
                       
-                            Console.Write(ratings.GetLength(1) - 1);
+                            //Console.Write(ratings.GetLength(1) - 1);
                         if (ratings[i, 0] != itemList[a] && a == itemList.Length - 1)
                         {
                             matrix[index, a + 2] = 9999;

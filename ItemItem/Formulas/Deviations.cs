@@ -40,7 +40,7 @@ namespace ItemItem.Formulas
                     }
 
                 }
-
+                Console.WriteLine(i);
             }
         }
         public static Boolean checkCombination(int itemIndex1, int itemIndex2)

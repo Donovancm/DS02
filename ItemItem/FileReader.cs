@@ -94,5 +94,23 @@ namespace ItemItem
             Array.Sort(array);
             return array;
         }
+        public static double[] GetItemListLens(Dictionary<int, double[,]> data)
+        {
+            List<double> itemlist = new List<double>();
+            foreach (var item in data)
+            {
+                var arrayRatingMatrix = item.Value;
+                for (int i = 0; i <= arrayRatingMatrix.GetLength(1)-1; i++)
+                {
+                    if (!itemlist.Contains(arrayRatingMatrix[i,0]))
+                    {
+                        itemlist.Add(arrayRatingMatrix[i, 0]);
+                    }
+                }
+            }
+            double[] array = itemlist.ToArray();
+            Array.Sort(array);
+            return array;
+        }
     }
 }

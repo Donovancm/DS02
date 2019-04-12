@@ -16,15 +16,19 @@ namespace ItemItem.Formulas
             {
                 RatingMin = setMinRating(matrix, i);
                 RatingMax = setMaxRating(matrix, i);
-                normalizedMatrix[i, 8] = RatingMin;
-                normalizedMatrix[i, 9] = RatingMax;
+               
+                normalizedMatrix[i, normalizedMatrix.GetLength(1)-2] = RatingMin;
+                normalizedMatrix[i, normalizedMatrix.GetLength(1) - 1] = RatingMax;
                 for (int j = 2; j <= matrix.GetLength(1) - 1; j++)
                 {
                     rating = matrix[i, j];
-                    var upperDev = rating - RatingMin;
-                    var lowerDev = RatingMax - RatingMin;
-                    double normalize = 2 * (upperDev / lowerDev) - 1;
-                    normalizedMatrix[i, j] = normalize;
+                    if (rating >0)
+                    {
+                        var upperDev = rating - RatingMin;
+                        var lowerDev = RatingMax - RatingMin;
+                        double normalize = 2 * (upperDev / lowerDev) - 1;
+                        normalizedMatrix[i, j] = normalize;
+                    }
                 }
             }
             return normalizedMatrix;
@@ -34,16 +38,18 @@ namespace ItemItem.Formulas
         {
             var data = matrix;
             var number = data.GetLength(1);
-            var array = new double[number -2];
+            List<double> list = new List<double>();
+            //var array = new double[number -2];
             //var newArray = new double[number, 2];
             for (int i = 2; i <= data.GetLength(1) - 1; i++)
             {
-                if (data[userIndex, i] !=0)
+                if (data[userIndex, i] >0)
                 {
-                    array[i - 2] = data[userIndex, i];
+                    list.Add(data[userIndex, i]);
                 }
                 
             }
+            double[] array = list.ToArray();
             Array.Sort(array);
             return array[0];
         }
