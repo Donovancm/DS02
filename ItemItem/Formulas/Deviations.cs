@@ -15,9 +15,9 @@ namespace ItemItem.Formulas
             devMatrixUserAmount = new double[itemList.Length, itemList.Length];
             for (int i = 0; i <= itemList.Length - 1; i++)
             {
+                Console.WriteLine(i);
                 for (int a = 0; a <= itemList.Length - 1; a++)
                 {
-
                     if (itemList[i] == itemList[a])
                     {
                         devMatrixSimilarity[i, a] = 0;
@@ -40,7 +40,8 @@ namespace ItemItem.Formulas
                     }
 
                 }
-                //Console.WriteLine(i);
+                Console.WriteLine(i);
+               
             }
         }
         public static Boolean checkCombination(int itemIndex1, int itemIndex2)

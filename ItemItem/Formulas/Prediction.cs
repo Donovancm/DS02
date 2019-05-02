@@ -6,22 +6,31 @@ namespace ItemItem.Formulas
 {
     class Prediction
     {
+        /// <summary>
+        /// Rating to normalized, normalized ratings converting to new denormalized rating to calculate prediction 
+        /// </summary>
+        /// <param name="devMatrix">Table of deviations similarity</param>
+        /// <param name="normalizationMatrix">table of normalized ratings</param>
+        /// <param name="item">product</param>
+        /// <param name="itemList">list of products</param>
+        /// <param name="userID">user id</param>
+        /// <returns>double prediction value</returns>
         public static double CalculatePrediction(double[,] devMatrix, double[,] normalizationMatrix, int item, double[] itemList, int userID )
         {
-            var upper = 0.0;
-            var lower = 0.0;
+            var numerator = 0.0;
+            var denominator = 0.0;
             var prediction = 0.0;
             for (int i = 2; i <= normalizationMatrix.GetLength(1) - 3; i++)
             {
                 if (item != itemList[i-2])
                 {
                     double sim = devMatrix[userID -1, i - 2];
-                    double nr = normalizationMatrix[userID-1, i];
-                    upper += nr * sim;
-                    lower += Math.Abs(sim);
+                    double rn = normalizationMatrix[userID-1, i];
+                    numerator += rn * sim;
+                    denominator += Math.Abs(sim);
                 }
             }
-            prediction = upper / lower;
+            prediction = numerator / denominator;
             double r = ((prediction + 1) / 2) * (normalizationMatrix[userID - 1, normalizationMatrix.GetLength(1)-1] - normalizationMatrix[userID - 1, normalizationMatrix.GetLength(1)-2]) + 1;
             return r;
         }

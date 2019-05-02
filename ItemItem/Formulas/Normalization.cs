@@ -6,6 +6,11 @@ namespace ItemItem.Formulas
 {
     class Normalization
     {
+        /// <summary>
+        ///  Table for normalized values of products
+        /// </summary>
+        /// <param name="matrix">product rating</param>
+        /// <returns>Table of product ratings</returns>
         public static double[,] NormalizedMatrix(double[,] matrix)
         {
             var normalizedMatrix = new double[matrix.GetLength(0), matrix.GetLength(1)+2];
@@ -34,6 +39,12 @@ namespace ItemItem.Formulas
             return normalizedMatrix;
         }
 
+        /// <summary>
+        ///  Get the min rating of product row
+        /// </summary>
+        /// <param name="matrix">product rating</param>
+        /// <param name="userIndex">user id</param>
+        /// <returns>double min rating</returns>
         public static double setMinRating(double[,] matrix, int userIndex)
         {
             var data = matrix;
@@ -53,6 +64,12 @@ namespace ItemItem.Formulas
             Array.Sort(array);
             return array[0];
         }
+        /// <summary>
+        /// Get the max rating of the product row
+        /// </summary>
+        /// <param name="matrix">product rating</param>
+        /// <param name="userIndex">user id</param>
+        /// <returns>double max rating</returns>
         public static double setMaxRating(double[,] matrix, int userIndex)
         {
             var data = matrix;

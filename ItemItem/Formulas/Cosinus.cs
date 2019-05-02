@@ -1,98 +1,109 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace ItemItem.Formulas
 {
     class Cosinus
     {
-        public static Boolean checkItem2(int item,double[,] matrix , int userIndex, double[] itemList)
+        static double[] itemlist = null;
+        static double[,] matrixACS = null;
+        /// <summary>
+        ///  Checks whether item id exist in user rating
+        /// </summary>
+        /// <param name="item">item id</param>
+        /// <param name="userIndex">user id</param>
+        /// <returns>Boolean</returns>
+        public static Boolean CheckItem(int item, int userIndex)
         {
+            double[] itemList = itemlist;
+            double[,] Matrix = matrixACS;
             int indexFoundItem = 0;
-            for (int a = 0; a <= itemList.Length - 1; a++)
+
+            List<double> items = itemList.OfType<double>().ToList();
+            int index = items.BinarySearch(item);
+            if (index >= 0)
             {
-                if (itemList[a] == item)
+                indexFoundItem = index + 2;
+                if (Matrix[userIndex, indexFoundItem] != 0)
                 {
-                    indexFoundItem = a + 2;
-                    break;
+                    return true;
                 }
-            }
-            if (matrix[userIndex, indexFoundItem] != 0)
-            {
-                return true;
             }
             return false;
         }
-        public static Boolean checkitem1(int item, double[,] matrix, int userIndex, double[] itemList)
+            /// <summary>
+            ///  Performs the Adjusted Cosinus Formula
+            /// </summary>
+            /// <param name="matrix">table</param>
+            /// <param name="itemI">product I</param>
+            /// <param name="itemJ">product J</param>
+            /// <param name="itemList">list of items</param>
+            /// <returns>double array</returns>
+            public static double[] ACS(double[,] matrix, int itemI, int itemJ, double[] itemList)
         {
-            int indexFoundItem = 0;
-            for (int a = 0; a <= itemList.Length-1; a++)
-            {
-                if (itemList[a] == item)
-                {
-                    indexFoundItem = a + 2;
-                    break;
-                }
-            }
-            if (matrix[userIndex,indexFoundItem] !=0)
-            {
-                return true;
-            }
-            return false;
-        }
-        public static double[] ACS(double[,] matrix, int item1, int item2, double[] itemList)
-        {
-            double ratingItem1 = 0.0;
-            double ratingItem2 = 0.0;
+            matrixACS = matrix;
+            itemlist = itemList;
+            double ratingItemI = 0.0;
+            double ratingItemJ = 0.0;
             double userAverageRating = 0.0;
             int row = matrix.GetLength(0);
-            double[] arrayItem1 = new double[row];
-            double[] arrayItem2 = new double[row];
-            double lowerLeft = 0.0;
-            double lowerRight = 0.0;
+            double[] arraySumItemI = new double[row];
+            double[] arraySumItemJ = new double[row];
+            double leftDenominator = 0.0;
+            double rightDenominator = 0.0;
             int indexItem1 = 0;
-            int indexItem2 = 0;
+            int indexItemJ = 0;
             double userAmount = 0;
 
-            for (int i = 0; i <= matrix.GetLength(0) -1; i++)
+            for (int i = 0; i <= matrix.GetLength(0) - 1; i++)
             {
-                for (int j = 0; j <= itemList.Length -1; j++)
+                List<double> items = itemList.OfType<double>().ToList();
+                int indexI = items.BinarySearch(itemI);
+                int indexJ = items.BinarySearch(itemJ);
+                int userIndex = i;
+                if (indexI >= 0)
                 {
-                    int userIndex = i;
-                    if (itemList[j] == item1 && matrix[i,j+2] != 0)
+                    if (matrix[i, indexI + 2] != 0)
                     {
-                       
-                        if (checkItem2(item2, matrix, userIndex, itemList))
+                        // checks combination with itemJ example: 101->102 && 102->101
+                        if (CheckItem(itemJ, userIndex))
                         {
                             userAmount++;
-                            ratingItem1 = matrix[i, j + 2];
+                            ratingItemI = matrix[i, indexI + 2];
                             userAverageRating = matrix[i, 1];
-                            arrayItem1[indexItem1] = ratingItem1 - userAverageRating;
-                            lowerLeft += Math.Pow(ratingItem1 - userAverageRating, 2);
+                            arraySumItemI[indexItem1] = ratingItemI - userAverageRating;
+                            leftDenominator += Math.Pow(ratingItemI - userAverageRating, 2);
                             indexItem1++;
+
                         }
 
                     }
-                    else if (itemList[j] == item2 && matrix[i, j + 2] != 0)
+                }
+                if (indexJ >= 0)
+                {
+                    if (matrix[i, indexJ + 2] != 0)
                     {
-                        if (checkitem1(item1, matrix, userIndex, itemList))
+                        if (CheckItem(itemI, userIndex))
                         {
-                            ratingItem2 = matrix[i, j + 2];
+                            ratingItemJ = matrix[i, indexJ + 2];
                             userAverageRating = matrix[i, 1];
-                            arrayItem2[indexItem2] = ratingItem2 - userAverageRating;
-                            lowerRight += Math.Pow(ratingItem2 - userAverageRating, 2);
-                            indexItem2++;
+                            arraySumItemJ[indexItemJ] = ratingItemJ - userAverageRating;
+                            rightDenominator += Math.Pow(ratingItemJ - userAverageRating, 2);
+                            indexItemJ++;
                         }
+
                     }
                 }
             }
-            double upper = 0;
-            double lower = Math.Sqrt(lowerLeft) * Math.Sqrt(lowerRight);
-            for (int a = 0; a < arrayItem1.Length - 1; a++)
+            double numerator = 0;
+            double denominator = Math.Sqrt(leftDenominator) * Math.Sqrt(rightDenominator);
+            for (int a = 0; a < arraySumItemI.Length - 1; a++)
             {
-                upper += arrayItem1[a] * arrayItem2[a];
+                numerator += arraySumItemI[a] * arraySumItemJ[a];
             }
-            var result = upper / lower;
+            var result = numerator / denominator;
             double[] resultArray = new double[] { result, userAmount};
             return resultArray;
         }

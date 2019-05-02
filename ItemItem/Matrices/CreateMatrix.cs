@@ -6,6 +6,10 @@ namespace ItemItem.Matrices
 {
     class CreateMatrix
     {
+        /// <summary>
+        ///  Calculate average rating of selected products
+        /// </summary>
+        /// <param name="matrix">product rating</param>
         public static void CalculateAverageRating(double[,] matrix)
         {
             
@@ -24,21 +28,25 @@ namespace ItemItem.Matrices
                 matrix[i, 1] = sumrating / totalItems;
             }
         }
-        public static double[,] Create(double[] itemList, Dictionary<int, double[,]> item)
+        /// <summary>
+        ///  Create table matrix for product ratings
+        /// </summary>
+        /// <param name="itemList">list of products id</param>
+        /// <param name="data">user rating data</param>
+        /// <returns>table of 2DArray</returns>
+        public static double[,] Create(double[] itemList, Dictionary<int, double[,]> data)
         {
-            var matrix = new double[item.Count, itemList.Length +2];
+            var matrix = new double[data.Count, itemList.Length +2];
             var index = -1;
-            foreach (var Useritem in item)
+            foreach (var Useritem in data)
             {
                 index++;
                 matrix[index, 0] = Useritem.Key;
-                var ratings = item[Useritem.Key];
+                var ratings = data[Useritem.Key];
                 for (int i = 0; i <= ratings.GetLength(0)-1; i++)
                 {
                     for (int a = 0; a <= itemList.Length - 1; a++)
                     {
-                      
-                            //Console.Write(ratings.GetLength(1) - 1);
                         if (ratings[i, 0] != itemList[a] && a == itemList.Length - 1)
                         {
                             matrix[index, a + 2] = 9999;
