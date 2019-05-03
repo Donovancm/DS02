@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ItemItem.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -9,64 +10,72 @@ namespace ItemItem
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
-            var data2 = new[,]
+            PickDesiredItem();
+        }
+        public static void PickDesiredItem()
+        {
+            IReader iReader = null;
+            Dictionary<int, double[,]> dictionaryBasic = new Dictionary<int, double[,]>();
+            Dictionary<int, double[,]> dictionaryAdvanced = new Dictionary<int, double[,]>();
+            var itemList = new double[0];
+            var matrix = new double[0, 0];
+            string[] headers = new string[] { "userid/itemid", "avg rating" };
+            Console.WriteLine("Pick Dataset");
+            int choiceData = int.Parse(Console.ReadLine());
+            Console.WriteLine("\n");
+
+            switch (choiceData)
             {
-            {1, 104, 3.0},
-            {1, 106, 5.0 },
-            {1, 107, 4.0 },
-            {1,109,1.0 },
+                case 1:
+                    iReader = new Datareader();
+                    dictionaryAdvanced = iReader.GetData();
+                    itemList = FileReader.GetItemListLens(dictionaryAdvanced);
+                    matrix = Matrices.CreateMatrix.Create(itemList, dictionaryAdvanced);
+                    Console.WriteLine("Average waiting time to load is 16 minutes");
+                    break;
+                case 2:
+                    iReader = new FileReader();
+                    dictionaryBasic = iReader.GetData();
+                    itemList = FileReader.GetItemList();
+                    matrix = Matrices.CreateMatrix.Create(itemList, dictionaryBasic);
+                    PrintMethods.Print2DArrayMatrix(matrix, PrintMethods.SetTableHeaderMatrix(headers, itemList));
+                    Console.WriteLine("\n");
+                    break;
+                default:
+                    Console.WriteLine("Closed");
+                    Console.ReadLine();
+                    break;
+            }
+            Console.WriteLine("Pick the first item id ");
+            int choice1 = int.Parse(Console.ReadLine());
 
-            {2, 104, 3.0},
-            {2, 106, 4.0 },
-            {2, 107, 4.0 },
-            {2,109,1.0 },
+            Console.WriteLine("\n");
 
-            {3, 103, 4.0},
-            {3, 104, 3.0 },
-            {3, 107, 3.0 },
-            {3, 109, 1.0 },
+            Console.WriteLine("Pick the second item id ");
+            int choice2 = int.Parse(Console.ReadLine());
 
-            {4, 103, 4.0},
-            {4, 104, 4.0 },
-            {4, 106, 4.0 },
-            {4, 107, 3.0 },
-            {4, 109, 1.0 },
+            Console.WriteLine("\n");
 
-            {5, 103, 5.0 },
-            {5, 104, 4.0 },
-            {5, 106, 5.0 },
-            {5, 109, 3.0 }
-            };
-            Datareader.GetData();
-
-            Dictionary<int, double[,]> dictionaryBasic = FileReader.GetData(data2);
-            var itemList = FileReader.GetItemList(data2);
-
-            //Dictionary<int, double[,]> dictionaryBasic = Datareader.GetData();
-            //var itemList = FileReader.GetItemListLens(dictionaryBasic);
-
-            //Dictionary<int, double[,]> dictionaryBasic = FileReader.GetData(data2);
-            //var itemList = FileReader.GetItemList(data2);
-            var matrix = Matrices.CreateMatrix.Create(itemList, dictionaryBasic);
-            string[] headers = new string[] { "userid/itemid", "avg rating"  };
-           // PrintMethods.Print2DArrayMatrix(matrix, PrintMethods.SetTableHeaderMatrix(headers,itemList));
-
-            Formulas.Cosinus.ACS(matrix, 103, 104, itemList);
+            Formulas.Cosinus.ACS(matrix, choice1, choice2, itemList);
             Formulas.Deviations.CreateDeviationMatrix(itemList, matrix);
             var devMatrixS = Formulas.Deviations.devMatrixSimilarity;
             var devMatrixU = Formulas.Deviations.devMatrixUserAmount;
-           // PrintMethods.Print2DArrayDevMatrix(devMatrixS, PrintMethods.SetTableHeaderDevMatrix(null, itemList));
-
-
-
-           // PrintMethods.Print2DArrayDevMatrixUsers(devMatrixU, PrintMethods.SetTableHeaderDevMatrix(null, itemList));
             var normalizeMatrixRating = Formulas.Normalization.NormalizedMatrix(matrix);
 
-            Console.WriteLine("Predicted result: "+ Formulas.Prediction.CalculatePrediction(devMatrixS, normalizeMatrixRating, 103, itemList, 1));
+            if (choiceData == 2)
+            {
+                PrintMethods.Print2DArrayDevMatrix(devMatrixS, PrintMethods.SetTableHeaderDevMatrix(null, itemList));
+                PrintMethods.Print2DArrayDevMatrixUsers(devMatrixU, PrintMethods.SetTableHeaderDevMatrix(null, itemList));
+            }
+            Console.WriteLine("Pick product for new predicted rating");
+            //read
+            int choice3 = int.Parse(Console.ReadLine());
+            Console.WriteLine("\n");
+            Console.WriteLine("Pick the desired User");
+            int choice4 = int.Parse(Console.ReadLine());
+            Console.WriteLine("Predicted result: " + Formulas.Prediction.CalculatePrediction(devMatrixS, normalizeMatrixRating, choice3, itemList, choice4));
             Console.ReadLine();
-        }
-        public static void PickData()
-        {
+
 
         }
     }

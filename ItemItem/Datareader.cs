@@ -1,13 +1,14 @@
-﻿using System;
+﻿using ItemItem.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
 namespace ItemItem
 {
-    class Datareader
+    class Datareader : IReader
     {
-        public static Dictionary<int, double[,]> GetData()
+        public Dictionary<int, double[,]> GetData()
         {
             var dictionary = new Dictionary<int, double[,]>();
 

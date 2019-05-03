@@ -15,7 +15,6 @@ namespace ItemItem.Formulas
             devMatrixUserAmount = new double[itemList.Length, itemList.Length];
             for (int i = 0; i <= itemList.Length - 1; i++)
             {
-                Console.WriteLine(i);
                 for (int a = 0; a <= itemList.Length - 1; a++)
                 {
                     if (itemList[i] == itemList[a])
@@ -32,7 +31,7 @@ namespace ItemItem.Formulas
                         {
                             int item1 = int.Parse(itemList[i] + "");
                             int item2 = int.Parse(itemList[a] + "");
-                            double[] resultArray = Formulas.Cosinus.ACS(matrix, item1, item2, itemList);
+                            double[] resultArray = Cosinus.ACS(matrix, item1, item2, itemList);
                             devMatrixSimilarity[i, a] = resultArray[0];
                             devMatrixUserAmount[i, a] = resultArray[1];
                         }
@@ -40,7 +39,6 @@ namespace ItemItem.Formulas
                     }
 
                 }
-                Console.WriteLine(i);
                
             }
         }
