@@ -37,9 +37,26 @@ namespace ItemItem
             {5, 106, 5.0 },
             {5, 109, 3.0 }
             };
+            var dataToor = new[,]
+            {
+            {1, 103, 4.0 },
+            {1, 106, 3.0},
+            {1, 109, 4.0 },
+
+            {2, 103, 5.0},
+            {2, 106, 2.0 },
+
+            {3, 106, 3.5},
+            {3, 109, 4.0 },
+
+            {4, 103, 5.0},
+            {4, 109, 3.0 },
+
+
+            };
             var dictionary = new Dictionary<int, double[,]>();
-            int rowLength = data.GetLength(0);
-            int colLenght = data.GetLength(1);
+            int rowLength = dataToor.GetLength(0);
+            int colLenght = dataToor.GetLength(1);
             bool checkeNewRow = false;
 
             for (int i = 0; i < rowLength; i++)
@@ -51,21 +68,21 @@ namespace ItemItem
 
                 for (int j = 0; j < colLenght; j++)
                 {
-                    //Console.WriteLine(data[i, j]);
+                    //Console.WriteLine(dataToor[i, j]);
                     if (!checkeNewRow)
                     {
-                        key = int.Parse(data[i, j] + "");
+                        key = int.Parse(dataToor[i, j] + "");
                         checkeNewRow = true;
 
                     }
 
                     else if (j == 1)
                     {
-                        productvalue = data[i, j];
+                        productvalue = dataToor[i, j];
                     }
                     else if (j == 2)
                     {
-                        userRating = data[i, j];
+                        userRating = dataToor[i, j];
                         var userdata = new double[,]
                         {
                             {productvalue,userRating}
@@ -131,14 +148,31 @@ namespace ItemItem
             {5, 106, 5.0 },
             {5, 109, 3.0 }
             };
-            var item = new List<double>();
-            for (int i = 0; i <= data.GetLength(0) - 1; i++)
+            var dataToor = new[,]
             {
-                for (int j = 0; j <= data.GetLength(1) - 1; j++)
+            {1, 103, 4.0 },
+            {1, 106, 3.0},
+            {1, 109, 4.0 },
+
+            {2, 103, 5.0},
+            {2, 106, 2.0 },
+
+            {3, 106, 3.5},
+            {3, 109, 4.0 },
+
+            {4, 103, 5.0},
+            {4, 109, 3.0 },
+
+
+            };
+            var item = new List<double>();
+            for (int i = 0; i <= dataToor.GetLength(0) - 1; i++)
+            {
+                for (int j = 0; j <= dataToor.GetLength(1) - 1; j++)
                 {
-                    if (!item.Contains(data[i, 1]))
+                    if (!item.Contains(dataToor[i, 1]))
                     {
-                        item.Add(data[i, 1]);
+                        item.Add(dataToor[i, 1]);
                     }
 
                 }
@@ -147,10 +181,10 @@ namespace ItemItem
             Array.Sort(array);
             return array;
         }
-        public static double[] GetItemListLens(Dictionary<int, double[,]> data)
+        public static double[] GetItemListLens(Dictionary<int, double[,]> dataToor)
         {
             List<double> itemlist = new List<double>();
-            foreach (var item in data)
+            foreach (var item in dataToor)
             {
                 var arrayRatingMatrix = item.Value;
                 for (int i = 0; i <= arrayRatingMatrix.GetLength(1)-1; i++)

@@ -4,23 +4,23 @@ using System.Text;
 
 namespace ItemItem.Formulas
 {
-    class Deviations
+    class SimilarityMatrix
     {
-        public static double[,] devMatrixSimilarity { get; set; }
-        public static double[,] devMatrixUserAmount { get; set; }
+        public static double[,] MatrixSimilarityValues { get; set; }
+        public static double[,] MatrixSimilarityUserAmount { get; set; }
 
-        public static void CreateDeviationMatrix(double[] itemList, double[,] matrix)
+        public static void CreateSimilarityMatrix(double[] itemList, double[,] matrix)
         {
-            devMatrixSimilarity = new double[itemList.Length, itemList.Length];
-            devMatrixUserAmount = new double[itemList.Length, itemList.Length];
+            MatrixSimilarityValues = new double[itemList.Length, itemList.Length];
+            MatrixSimilarityUserAmount = new double[itemList.Length, itemList.Length];
             for (int i = 0; i <= itemList.Length - 1; i++)
             {
                 for (int a = 0; a <= itemList.Length - 1; a++)
                 {
                     if (itemList[i] == itemList[a])
                     {
-                        devMatrixSimilarity[i, a] = 0;
-                        devMatrixUserAmount[i, a] = 0;
+                        MatrixSimilarityValues[i, a] = 0;
+                        MatrixSimilarityUserAmount[i, a] = 0;
                         // set null 
                     }
                     else if (itemList[i] != itemList[a])
@@ -32,8 +32,8 @@ namespace ItemItem.Formulas
                             int item1 = int.Parse(itemList[i] + "");
                             int item2 = int.Parse(itemList[a] + "");
                             double[] resultArray = Cosinus.ACS(matrix, item1, item2, itemList);
-                            devMatrixSimilarity[i, a] = resultArray[0];
-                            devMatrixUserAmount[i, a] = resultArray[1];
+                            MatrixSimilarityValues[i, a] = resultArray[0];
+                            MatrixSimilarityUserAmount[i, a] = resultArray[1];
                         }
 
                     }
@@ -44,7 +44,7 @@ namespace ItemItem.Formulas
         }
         public static Boolean checkCombination(int itemIndex1, int itemIndex2)
         {
-            if (devMatrixSimilarity[itemIndex1, itemIndex2] == 0 && devMatrixSimilarity[itemIndex2, itemIndex1] == 0)
+            if (MatrixSimilarityValues[itemIndex1, itemIndex2] == 0 && MatrixSimilarityValues[itemIndex2, itemIndex1] == 0)
             {
                 return true;
             }

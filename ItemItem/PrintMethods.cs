@@ -20,11 +20,11 @@ namespace ItemItem
                 {
                     if (j == 0 || j == 1)
                     {
-                        Console.Write(matrix[i, j] + "\t" + "\t");
+                        Console.Write(Math.Round(matrix[i, j],2) + "\t" + "\t");
                     }
                     else
                     {
-                        Console.Write(matrix[i, j] + "\t");
+                        Console.Write(Math.Round(matrix[i, j], 2) + "\t");
                     }
 
                 }

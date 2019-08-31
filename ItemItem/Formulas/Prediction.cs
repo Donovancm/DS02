@@ -24,10 +24,10 @@ namespace ItemItem.Formulas
             {
                 if (item != itemList[i-2])
                 {
-                    double sim = devMatrix[userID -1, i - 2];
+                    double sim = devMatrix[(0), (i - 2)];
                     double rn = normalizationMatrix[userID-1, i];
-                    numerator += rn * sim;
-                    denominator += Math.Abs(sim);
+                    numerator = numerator+( rn * sim);
+                    denominator = denominator+ Math.Abs(sim);
                 }
             }
             prediction = numerator / denominator;

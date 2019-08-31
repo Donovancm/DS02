@@ -20,7 +20,7 @@ namespace ItemItem
             var itemList = new double[0];
             var matrix = new double[0, 0];
             string[] headers = new string[] { "userid/itemid", "avg rating" };
-            Console.WriteLine("Pick Dataset");
+            Console.WriteLine("Pick Dataset, 1 for Advanced and 2 for Basic");
             int choiceData = int.Parse(Console.ReadLine());
             Console.WriteLine("\n");
 
@@ -57,9 +57,9 @@ namespace ItemItem
             Console.WriteLine("\n");
 
             Formulas.Cosinus.ACS(matrix, choice1, choice2, itemList);
-            Formulas.Deviations.CreateDeviationMatrix(itemList, matrix);
-            var devMatrixS = Formulas.Deviations.devMatrixSimilarity;
-            var devMatrixU = Formulas.Deviations.devMatrixUserAmount;
+            Formulas.SimilarityMatrix.CreateSimilarityMatrix(itemList, matrix);
+            var devMatrixS = Formulas.SimilarityMatrix.MatrixSimilarityValues;
+            var devMatrixU = Formulas.SimilarityMatrix.MatrixSimilarityUserAmount;
             var normalizeMatrixRating = Formulas.Normalization.NormalizedMatrix(matrix);
 
             if (choiceData == 2)
