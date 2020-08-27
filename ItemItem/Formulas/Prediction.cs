@@ -1,38 +1,49 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace ItemItem.Formulas
 {
     class Prediction
     {
-        /// <summary>
-        /// Rating to normalized, normalized ratings converting to new denormalized rating to calculate prediction 
-        /// </summary>
-        /// <param name="devMatrix">Table of deviations similarity</param>
-        /// <param name="normalizationMatrix">table of normalized ratings</param>
-        /// <param name="item">product</param>
-        /// <param name="itemList">list of products</param>
-        /// <param name="userID">user id</param>
-        /// <returns>double prediction value</returns>
-        public static double CalculatePrediction(double[,] devMatrix, double[,] normalizationMatrix, int item, double[] itemList, int userID )
+        public static double CalculatePrediction_New(int userID, int productID)
         {
-            var numerator = 0.0;
-            var denominator = 0.0;
             var prediction = 0.0;
-            for (int i = 2; i <= normalizationMatrix.GetLength(1) - 3; i++)
+
+            var userNormalizeRatings = Normalization.NormalizedDictionary[userID];
+
+            double upper = 0.0;
+            double lower = 0.0;
+            foreach (var userRatings in userNormalizeRatings)
             {
-                if (item != itemList[i-2])
-                {
-                    double sim = devMatrix[(0), (i - 2)];
-                    double rn = normalizationMatrix[userID-1, i];
-                    numerator = numerator+( rn * sim);
-                    denominator = denominator+ Math.Abs(sim);
-                }
+                //productID = 103
+                double upperRn = userRatings.Item2; // 106 , rn = 5
+                double sim = GetSimilarityValue(productID, userRatings.Item1); // 103 & 106
+                lower += Math.Abs(sim);
+                upper += (upperRn * sim);
             }
-            prediction = numerator / denominator;
-            double r = ((prediction + 1) / 2) * (normalizationMatrix[userID - 1, normalizationMatrix.GetLength(1)-1] - normalizationMatrix[userID - 1, normalizationMatrix.GetLength(1)-2]) + 1;
+
+            prediction = upper / lower;
+            int maxRating = (int)FileReader.DictionaryData[userID].Select(x => x.Item2).Max();
+            int minRating = (int)FileReader.DictionaryData[userID].Select(x => x.Item2).Min();
+            double r = ((prediction + 1) / 2) * ( maxRating - minRating ) + 1;
             return r;
+        }
+
+        private static double GetSimilarityValue(int productID, int item1)
+        {
+            double similarity = 0.0;
+            if (Cosinus.SimilarityDictionary.ContainsKey(productID) && Cosinus.SimilarityDictionary[productID].Any(x => x.Item1 == item1))
+            {
+                similarity = Cosinus.SimilarityDictionary[productID].Find(x => x.Item1 == item1).Item2;
+            }
+            else
+            {
+                similarity = Cosinus.SimilarityDictionary[item1].Find(x => x.Item1 == productID).Item2;
+            }
+
+            return similarity;
         }
     }
 }

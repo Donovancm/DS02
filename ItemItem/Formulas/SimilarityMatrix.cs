@@ -35,6 +35,14 @@ namespace ItemItem.Formulas
                             MatrixSimilarityValues[i, a] = resultArray[0];
                             MatrixSimilarityUserAmount[i, a] = resultArray[1];
                         }
+                        else
+                        {
+                            int item1 = int.Parse(itemList[i] + "");
+                            int item2 = int.Parse(itemList[a] + "");
+                            double[] resultArray = Cosinus.ACS(matrix, item1, item2, itemList);
+                            MatrixSimilarityValues[i, a] = Math.Abs(resultArray[0]);
+                            MatrixSimilarityUserAmount[i, a] = resultArray[1];
+                        }
 
                     }
 

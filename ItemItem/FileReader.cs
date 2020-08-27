@@ -1,15 +1,16 @@
 ﻿using ItemItem.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace ItemItem
 {
-    class FileReader : IReader
+    class FileReader
     {
-        public Dictionary<int, double[,]> GetData()
-        {
-            var data = new[,]
+        public static Dictionary<int, List<Tuple<int,double>>> DictionaryData = new Dictionary<int, List<Tuple<int, double>>>();
+        public static double[,] data = new[,]
             {
             {1, 104, 3.0},
             {1, 106, 5.0 },
@@ -37,7 +38,7 @@ namespace ItemItem
             {5, 106, 5.0 },
             {5, 109, 3.0 }
             };
-            var dataToor = new[,]
+        public static double[,] dataToor = new[,]
             {
             {1, 103, 4.0 },
             {1, 106, 3.0},
@@ -54,70 +55,85 @@ namespace ItemItem
 
 
             };
-            var dictionary = new Dictionary<int, double[,]>();
-            int rowLength = dataToor.GetLength(0);
-            int colLenght = dataToor.GetLength(1);
-            bool checkeNewRow = false;
+        public static void GetData(int dataChoice)
+        {
 
-            for (int i = 0; i < rowLength; i++)
+            if (dataChoice == 2)
             {
-                int key = -1;
-                double productvalue = -1;
-                double userRating = -1;
-                checkeNewRow = false;
+                SetupBasicData();
+            }else
+            {
+                SetupAdvancedData();
+            }
+            
+        }
 
-                for (int j = 0; j < colLenght; j++)
+        public static void SetupBasicData()
+        {
+            int rowLength = data.GetLength(0);
+            int colLenght = data.GetLength(1);
+
+            for (int i = 0; i <= rowLength - 1; i++)
+            {
+                double userId = data[i, 0];
+                double userProduct = data[i, 1];
+                double userProductRating = data[i, 2];
+                if (DictionaryData.ContainsKey((int)userId))
                 {
-                    //Console.WriteLine(dataToor[i, j]);
-                    if (!checkeNewRow)
-                    {
-                        key = int.Parse(dataToor[i, j] + "");
-                        checkeNewRow = true;
-
-                    }
-
-                    else if (j == 1)
-                    {
-                        productvalue = dataToor[i, j];
-                    }
-                    else if (j == 2)
-                    {
-                        userRating = dataToor[i, j];
-                        var userdata = new double[,]
-                        {
-                            {productvalue,userRating}
-                        };
-                        if (dictionary.ContainsKey(key))
-                        {
-                            var data2 = new double[,] { };
-                            data2 = dictionary[key];
-                            int rowLengthdata2 = data2.GetLength(0) - 1;
-                            int colLenghtdata2 = 2;
-                            int rowLengthdata3 = rowLengthdata2 + 1;
-                            int newRow2Ddata3 = data2.GetLength(0) + 1;
-                            var data3 = new double[newRow2Ddata3, colLenghtdata2];
-
-                            for (int r = 0; r <= rowLengthdata2; r++)
-                            {
-                                for (int c = 0; c < colLenghtdata2; c++)
-                                {
-                                    data3[r, c] = data2[r, c];
-                                }
-
-                            }
-                            data3[rowLengthdata3, 0] = productvalue;
-                            data3[rowLengthdata3, 1] = userRating;
-                            dictionary[key] = data3;
-
-                        }
-                        else { dictionary.Add(key, userdata); }
-
-                    }
-
+                    DictionaryData[(int)userId].Add(new Tuple<int, double>((int)userProduct, userProductRating));
+                }
+                else
+                {
+                    DictionaryData.Add((int)userId, new List<Tuple<int, double>> { new Tuple<int, double>((int)userProduct, userProductRating) });
                 }
             }
-            return dictionary;
+
         }
+        public static void SetupAdvancedData()
+        {
+            List<string> list = new List<string>();
+            using (StreamReader reader = new StreamReader("../../../../ItemItem/Files/u.data"))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    list.Add(line); // Add to list.
+                    //Console.WriteLine(line); // Write to console.
+                }
+            }
+
+            foreach (var item in list)
+            {
+                string[] userItem = item.Split("\t");
+                int userId = int.Parse(userItem[0]);
+                int userProduct = int.Parse(userItem[1]);
+                double userProductRating = double.Parse(userItem[2]);
+
+                if (DictionaryData.ContainsKey(userId))
+                {
+                    DictionaryData[userId].Add(new Tuple<int, double>(userProduct, userProductRating));
+                }
+                else
+                {
+                    DictionaryData.Add(userId, new List<Tuple<int, double>> { new Tuple<int, double>(userProduct, userProductRating) });
+                }
+            }
+        }
+
+            public static double[] GetItemList_New()
+        {
+            HashSet<double> hsetProducts = new HashSet<double>();
+            foreach (var user in DictionaryData)
+            {
+                var userProducts = user.Value.Select(x => (double)x.Item1).ToList<double>();
+                hsetProducts = hsetProducts.Concat((List<double>)userProducts).ToHashSet();
+            }
+            double[] array = new double[hsetProducts.Count()];
+            hsetProducts.CopyTo(array);
+            Array.Sort(array);
+            return array;
+        }
+
         public static double[] GetItemList()
         {
             var data = new[,]
@@ -166,13 +182,13 @@ namespace ItemItem
 
             };
             var item = new List<double>();
-            for (int i = 0; i <= dataToor.GetLength(0) - 1; i++)
+            for (int i = 0; i <= data.GetLength(0) - 1; i++)
             {
-                for (int j = 0; j <= dataToor.GetLength(1) - 1; j++)
+                for (int j = 0; j <= data.GetLength(1) - 1; j++)
                 {
-                    if (!item.Contains(dataToor[i, 1]))
+                    if (!item.Contains(data[i, 1]))
                     {
-                        item.Add(dataToor[i, 1]);
+                        item.Add(data[i, 1]);
                     }
 
                 }
@@ -181,10 +197,10 @@ namespace ItemItem
             Array.Sort(array);
             return array;
         }
-        public static double[] GetItemListLens(Dictionary<int, double[,]> dataToor)
+        public static double[] GetItemListLens(Dictionary<int, double[,]> data)
         {
             List<double> itemlist = new List<double>();
-            foreach (var item in dataToor)
+            foreach (var item in data)
             {
                 var arrayRatingMatrix = item.Value;
                 for (int i = 0; i <= arrayRatingMatrix.GetLength(1)-1; i++)

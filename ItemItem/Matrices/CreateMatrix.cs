@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace ItemItem.Matrices
 {
     class CreateMatrix
     {
+        // Key = UserID, Value = (AverageRating))
+        public static Dictionary<int, double> AverageRatingDictionary = new Dictionary<int, double>();
+        // Key = UserID,  Value = (ProductID, UserRating)
+        public static Dictionary<int, List<Tuple<int, double>>> MatrixDictionary = new Dictionary<int, List<Tuple<int, double>>>();
         /// <summary>
         ///  Calculate average rating of selected products
         /// </summary>
@@ -28,44 +33,51 @@ namespace ItemItem.Matrices
                 matrix[i, 1] = sumrating / totalItems;
             }
         }
-        /// <summary>
-        ///  Create table matrix for product ratings
-        /// </summary>
-        /// <param name="itemList">list of products id</param>
-        /// <param name="data">user rating data</param>
-        /// <returns>table of 2DArray</returns>
-        public static double[,] Create(double[] itemList, Dictionary<int, double[,]> data)
-        {
-            var matrix = new double[data.Count, itemList.Length +2];
-            var index = -1;
-            foreach (var Useritem in data)
-            {
-                index++;
-                matrix[index, 0] = Useritem.Key;
-                var ratings = data[Useritem.Key];
-                for (int i = 0; i <= ratings.GetLength(0)-1; i++)
-                {
-                    for (int a = 0; a <= itemList.Length - 1; a++)
-                    {
-                        if (ratings[i, 0] != itemList[a] && a == itemList.Length - 1)
-                        {
-                            matrix[index, a + 2] = 9999;
-                            // set null 
-                            break;
-                        }
-                        else if (ratings[i, 0] == itemList[a])
-                        {
-                            //set rating and calculate avg rating
-                            matrix[index, a + 2] = ratings[i, 1];
-                            break;
-                        }
 
+        public static void CalculateAverageRating_New()
+        {
+            foreach (var userRatings in FileReader.DictionaryData)
+            {
+                double sumRating = userRatings.Value.Sum(r => r.Item2);
+                int totalProductRating = userRatings.Value.Count();
+                AverageRatingDictionary.Add(userRatings.Key, (sumRating / totalProductRating));
+            }
+        }
+
+        public static void Create_New(double[] itemList)
+        {
+            List<int> users = new List<int>(FileReader.DictionaryData.Keys);
+            foreach (var id in users)
+            {
+                List<Tuple<int, double>> userProducts = FileReader.DictionaryData[id];
+                foreach (var productId in itemList)
+                {
+                    try
+                    {
+                        var userProductId = userProducts.Find(x => x.Item1 == productId).Item2;
+                        if (MatrixDictionary.ContainsKey(id))
+                        {
+                           MatrixDictionary[id].Add(new Tuple<int, double>((int)productId, userProductId));
+                        }
+                        else
+                        {
+                           MatrixDictionary.Add(id, new List<Tuple<int, double>>() { new Tuple<int, double>((int)productId, userProductId) });
+                        }
                     }
-                    
+                    catch (NullReferenceException ex)
+                    {
+                        if (MatrixDictionary.ContainsKey(id))
+                        {
+                            MatrixDictionary[id].Add( new Tuple<int, double>((int)productId, 0) );
+                        }
+                        else
+                        {
+                            MatrixDictionary.Add(id, new List<Tuple<int, double>>() { new Tuple<int, double>((int)productId, 0) });
+                        }
+                    }
+                  
                 }
             }
-            CalculateAverageRating(matrix);
-            return matrix;
         }
     }
 }

@@ -1,91 +1,39 @@
-﻿using System;
+﻿using ItemItem.Matrices;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace ItemItem.Formulas
 {
     class Normalization
     {
-        /// <summary>
-        ///  Table for normalized values of products
-        /// </summary>
-        /// <param name="matrix">product rating</param>
-        /// <returns>Table of product ratings</returns>
-        public static double[,] NormalizedMatrix(double[,] matrix)
+        // Key = userID, Value = (ProductID, NormalizedRating)
+        public static Dictionary<int, List<Tuple<int, double>>> NormalizedDictionary = new Dictionary<int, List<Tuple<int, double>>>();
+
+        public static void Normalize(int userID)
         {
-            var normalizedMatrix = new double[matrix.GetLength(0), matrix.GetLength(1)+2];
-            double rating = 0.0;
-            double RatingMax = 0.0;
-            double RatingMin = 0.0;
-            for (int i = 0; i <= matrix.GetLength(0) - 1; i++)
-            {
-                RatingMin = setMinRating(matrix, i);
-                RatingMax = setMaxRating(matrix, i);
-               
-                normalizedMatrix[i, normalizedMatrix.GetLength(1)-2] = RatingMin;
-                normalizedMatrix[i, normalizedMatrix.GetLength(1) - 1] = RatingMax;
-                for (int j = 2; j <= matrix.GetLength(1) - 1; j++)
+            //foreach (var user in FileReader.DictionaryData)
+            //{
+                var user = FileReader.DictionaryData[userID];
+                int maxRating = (int)user.Select(x => x.Item2).Max();
+                int minRating = (int)user.Select(x => x.Item2).Min();
+                foreach (var userRating in user)
                 {
-                    rating = matrix[i, j];
-                    if (rating >0)
+                    var upperDev = userRating.Item2 - minRating;
+                    var lowerDev = maxRating - minRating;
+                    double normalizedRating = 2 * (upperDev / lowerDev) - 1;
+                    if (NormalizedDictionary.ContainsKey(userID))
                     {
-                        var upperDev = rating - RatingMin;
-                        var lowerDev = RatingMax - RatingMin;
-                        double normalize = 2 * (upperDev / lowerDev) - 1;
-                        normalizedMatrix[i, j] = normalize;
+                        NormalizedDictionary[userID].Add(new Tuple<int, double>(userRating.Item1, normalizedRating));
+                    }
+                    else
+                    {
+                        NormalizedDictionary.Add(userID, new List<Tuple<int, double>>() { new Tuple<int, double>(userRating.Item1, normalizedRating) });
                     }
                 }
-            }
-            return normalizedMatrix;
-        }
 
-        /// <summary>
-        ///  Get the min rating of product row
-        /// </summary>
-        /// <param name="matrix">product rating</param>
-        /// <param name="userIndex">user id</param>
-        /// <returns>double min rating</returns>
-        public static double setMinRating(double[,] matrix, int userIndex)
-        {
-            var data = matrix;
-            var number = data.GetLength(1);
-            List<double> list = new List<double>();
-            //var array = new double[number -2];
-            //var newArray = new double[number, 2];
-            for (int i = 2; i <= data.GetLength(1) - 1; i++)
-            {
-                if (data[userIndex, i] >0)
-                {
-                    list.Add(data[userIndex, i]);
-                }
-                
-            }
-            double[] array = list.ToArray();
-            Array.Sort(array);
-            return array[0];
-        }
-        /// <summary>
-        /// Get the max rating of the product row
-        /// </summary>
-        /// <param name="matrix">product rating</param>
-        /// <param name="userIndex">user id</param>
-        /// <returns>double max rating</returns>
-        public static double setMaxRating(double[,] matrix, int userIndex)
-        {
-            var data = matrix;
-            var number = data.GetLength(1);
-            var array = new double[number - 1];
-            //var newArray = new double[number, 2];
-            for (int i = 1; i <= data.GetLength(1) - 1; i++)
-            {
-                if (data[userIndex, i] != 0)
-                {
-                    array[i - 1] = data[userIndex, i];
-                }
-            }
-            Array.Sort(array);
-            Array.Reverse(array);
-            return array[0];
+            //}
         }
     }
 }

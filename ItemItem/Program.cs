@@ -1,4 +1,5 @@
-﻿using ItemItem.Interfaces;
+﻿using ItemItem.Formulas;
+using ItemItem.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -15,30 +16,29 @@ namespace ItemItem
         public static void PickDesiredItem()
         {
             IReader iReader = null;
-            Dictionary<int, double[,]> dictionaryBasic = new Dictionary<int, double[,]>();
+            Dictionary<int, List<Tuple<int, double>>> dictionaryBasic = new Dictionary<int, List<Tuple<int, double>>>();
             Dictionary<int, double[,]> dictionaryAdvanced = new Dictionary<int, double[,]>();
             var itemList = new double[0];
             var matrix = new double[0, 0];
             string[] headers = new string[] { "userid/itemid", "avg rating" };
-            Console.WriteLine("Pick Dataset, 1 for Advanced and 2 for Basic");
+            Console.WriteLine("Pick a dataset, 1 for Advanced dataset and 2 for Basic dataset");
             int choiceData = int.Parse(Console.ReadLine());
             Console.WriteLine("\n");
 
             switch (choiceData)
             {
                 case 1:
-                    iReader = new Datareader();
-                    dictionaryAdvanced = iReader.GetData();
-                    itemList = FileReader.GetItemListLens(dictionaryAdvanced);
-                    matrix = Matrices.CreateMatrix.Create(itemList, dictionaryAdvanced);
-                    Console.WriteLine("Average waiting time to load is 16 minutes");
+                    FileReader.GetData(1);
+                    itemList = FileReader.GetItemList_New();
+                    Matrices.CreateMatrix.CalculateAverageRating_New();
+                    PrintMethods.Print2DArrayMatrix_New_BigData(PrintMethods.SetTableHeaderMatrix(headers, itemList), itemList);
+                    Console.WriteLine("\n");
                     break;
                 case 2:
-                    iReader = new FileReader();
-                    dictionaryBasic = iReader.GetData();
-                    itemList = FileReader.GetItemList();
-                    matrix = Matrices.CreateMatrix.Create(itemList, dictionaryBasic);
-                    PrintMethods.Print2DArrayMatrix(matrix, PrintMethods.SetTableHeaderMatrix(headers, itemList));
+                    FileReader.GetData(2);
+                    itemList = FileReader.GetItemList_New();
+                    Matrices.CreateMatrix.CalculateAverageRating_New();
+                    PrintMethods.Print2DArrayMatrix_New(PrintMethods.SetTableHeaderMatrix(headers, itemList), itemList);
                     Console.WriteLine("\n");
                     break;
                 default:
@@ -46,34 +46,25 @@ namespace ItemItem
                     Console.ReadLine();
                     break;
             }
-            Console.WriteLine("Pick the first item id ");
-            int choice1 = int.Parse(Console.ReadLine());
 
+            Console.WriteLine("Pick product and an user for new predicted rating");
+            Console.WriteLine("Pick the userID");
+            int userID = int.Parse(Console.ReadLine());
             Console.WriteLine("\n");
-
-            Console.WriteLine("Pick the second item id ");
-            int choice2 = int.Parse(Console.ReadLine());
-
+            Console.WriteLine("Pick the itemId ");
+            int productID = int.Parse(Console.ReadLine());
             Console.WriteLine("\n");
+            Cosinus.ACS(productID);
+            Normalization.Normalize(userID);
 
-            Formulas.Cosinus.ACS(matrix, choice1, choice2, itemList);
-            Formulas.SimilarityMatrix.CreateSimilarityMatrix(itemList, matrix);
-            var devMatrixS = Formulas.SimilarityMatrix.MatrixSimilarityValues;
-            var devMatrixU = Formulas.SimilarityMatrix.MatrixSimilarityUserAmount;
-            var normalizeMatrixRating = Formulas.Normalization.NormalizedMatrix(matrix);
-
+            //TODO print basic data info
             if (choiceData == 2)
             {
-                PrintMethods.Print2DArrayDevMatrix(devMatrixS, PrintMethods.SetTableHeaderDevMatrix(null, itemList));
-                PrintMethods.Print2DArrayDevMatrixUsers(devMatrixU, PrintMethods.SetTableHeaderDevMatrix(null, itemList));
+                //PrintMethods.Print2DArrayDevMatrix(devMatrixS, PrintMethods.SetTableHeaderDevMatrix(null, itemList));
+                //PrintMethods.Print2DArrayDevMatrixUsers(devMatrixU, PrintMethods.SetTableHeaderDevMatrix(null, itemList));
             }
-            Console.WriteLine("Pick product for new predicted rating");
-            //read
-            int choice3 = int.Parse(Console.ReadLine());
-            Console.WriteLine("\n");
-            Console.WriteLine("Pick the desired User");
-            int choice4 = int.Parse(Console.ReadLine());
-            Console.WriteLine("Predicted result: " + Formulas.Prediction.CalculatePrediction(devMatrixS, normalizeMatrixRating, choice3, itemList, choice4));
+     
+            Console.WriteLine("Predicted result: " + Prediction.CalculatePrediction_New(userID,productID));
             Console.ReadLine();
 
 
