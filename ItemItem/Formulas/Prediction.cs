@@ -7,23 +7,25 @@ namespace ItemItem.Formulas
 {
     class Prediction
     {
-        public static double CalculatePrediction_New(int userID, int productID)
+        /// <summary>
+        /// Berekent de prediction van de gewenste User product rating
+        /// </summary>
+        /// <param name="userID">Gewenste UserId</param>
+        /// <param name="productID">Gewenste ProductId</param>
+        /// <returns>Een prediction in double</returns>
+        public static double CalculatePrediction(int userID, int productID)
         {
             var prediction = 0.0;
-
             var userNormalizeRatings = Normalization.NormalizedDictionary[userID];
-
             double upper = 0.0;
             double lower = 0.0;
             foreach (var userRatings in userNormalizeRatings)
             {
-                //productID = 103
-                double upperRn = userRatings.Item2; // 106 , rn = 5
-                double sim = GetSimilarityValue(productID, userRatings.Item1); // 103 & 106
+                double upperRn = userRatings.Item2; 
+                double sim = GetSimilarityValue(productID, userRatings.Item1); 
                 lower += Math.Abs(sim);
                 upper += (upperRn * sim);
             }
-
             prediction = upper / lower;
             int maxRating = (int)FileReader.DictionaryData[userID].Select(x => x.Item2).Max();
             int minRating = (int)FileReader.DictionaryData[userID].Select(x => x.Item2).Min();
@@ -31,6 +33,12 @@ namespace ItemItem.Formulas
             return r;
         }
 
+        /// <summary>
+        ///  Pakt de gewenste productId en combinatie met een andere productId
+        /// </summary>
+        /// <param name="productID">Gewenste ProductId</param>
+        /// <param name="item1">Andere productId</param>
+        /// <returns>Similarity in double</returns>
         private static double GetSimilarityValue(int productID, int item1)
         {
             double similarity = 0.0;
@@ -42,7 +50,6 @@ namespace ItemItem.Formulas
             {
                 similarity = Cosinus.SimilarityDictionary[item1].Find(x => x.Item1 == productID).Item2;
             }
-
             return similarity;
         }
     }

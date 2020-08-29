@@ -1,5 +1,4 @@
-﻿using ItemItem.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -10,6 +9,7 @@ namespace ItemItem
     class FileReader
     {
         public static Dictionary<int, List<Tuple<int,double>>> DictionaryData = new Dictionary<int, List<Tuple<int, double>>>();
+        //voorbeeld data van opdracht
         public static double[,] data = new[,]
             {
             {1, 104, 3.0},
@@ -38,6 +38,7 @@ namespace ItemItem
             {5, 106, 5.0 },
             {5, 109, 3.0 }
             };
+        //data nodig voor opdracht
         public static double[,] dataToor = new[,]
             {
             {1, 103, 4.0 },
@@ -55,6 +56,7 @@ namespace ItemItem
 
 
             };
+
         public static void GetData(int dataChoice)
         {
 
@@ -70,6 +72,7 @@ namespace ItemItem
 
         public static void SetupBasicData()
         {
+            var data = dataToor;
             int rowLength = data.GetLength(0);
             int colLenght = data.GetLength(1);
 
@@ -97,8 +100,7 @@ namespace ItemItem
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
-                    list.Add(line); // Add to list.
-                    //Console.WriteLine(line); // Write to console.
+                    list.Add(line); 
                 }
             }
 
@@ -120,7 +122,11 @@ namespace ItemItem
             }
         }
 
-            public static double[] GetItemList_New()
+        /// <summary>
+        /// Pakt alle productlijsten
+        /// </summary>
+        /// <returns>een array van productId in double</returns>
+        public static double[] GetItemList()
         {
             HashSet<double> hsetProducts = new HashSet<double>();
             foreach (var user in DictionaryData)
@@ -133,88 +139,5 @@ namespace ItemItem
             Array.Sort(array);
             return array;
         }
-
-        public static double[] GetItemList()
-        {
-            var data = new[,]
-            {
-            {1, 104, 3.0},
-            {1, 106, 5.0 },
-            {1, 107, 4.0 },
-            {1,109,1.0 },
-
-            {2, 104, 3.0},
-            {2, 106, 4.0 },
-            {2, 107, 4.0 },
-            {2,109,1.0 },
-
-            {3, 103, 4.0},
-            {3, 104, 3.0 },
-            {3, 107, 3.0 },
-            {3, 109, 1.0 },
-
-            {4, 103, 4.0},
-            {4, 104, 4.0 },
-            {4, 106, 4.0 },
-            {4, 107, 3.0 },
-            {4, 109, 1.0 },
-
-            {5, 103, 5.0 },
-            {5, 104, 4.0 },
-            {5, 106, 5.0 },
-            {5, 109, 3.0 }
-            };
-            var dataToor = new[,]
-            {
-            {1, 103, 4.0 },
-            {1, 106, 3.0},
-            {1, 109, 4.0 },
-
-            {2, 103, 5.0},
-            {2, 106, 2.0 },
-
-            {3, 106, 3.5},
-            {3, 109, 4.0 },
-
-            {4, 103, 5.0},
-            {4, 109, 3.0 },
-
-
-            };
-            var item = new List<double>();
-            for (int i = 0; i <= data.GetLength(0) - 1; i++)
-            {
-                for (int j = 0; j <= data.GetLength(1) - 1; j++)
-                {
-                    if (!item.Contains(data[i, 1]))
-                    {
-                        item.Add(data[i, 1]);
-                    }
-
-                }
-            }
-            double[] array = item.ToArray();
-            Array.Sort(array);
-            return array;
-        }
-        public static double[] GetItemListLens(Dictionary<int, double[,]> data)
-        {
-            List<double> itemlist = new List<double>();
-            foreach (var item in data)
-            {
-                var arrayRatingMatrix = item.Value;
-                for (int i = 0; i <= arrayRatingMatrix.GetLength(1)-1; i++)
-                {
-                    if (!itemlist.Contains(arrayRatingMatrix[i,0]))
-                    {
-                        itemlist.Add(arrayRatingMatrix[i, 0]);
-                    }
-                }
-            }
-            double[] array = itemlist.ToArray();
-            Array.Sort(array);
-            return array;
-        }
-
     }
 }

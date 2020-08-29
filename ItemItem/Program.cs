@@ -1,5 +1,4 @@
 ﻿using ItemItem.Formulas;
-using ItemItem.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,12 +9,11 @@ namespace ItemItem
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Console.WriteLine("Welcome to ItemItem Algorithm");
             PickDesiredItem();
         }
         public static void PickDesiredItem()
         {
-            IReader iReader = null;
             Dictionary<int, List<Tuple<int, double>>> dictionaryBasic = new Dictionary<int, List<Tuple<int, double>>>();
             Dictionary<int, double[,]> dictionaryAdvanced = new Dictionary<int, double[,]>();
             var itemList = new double[0];
@@ -29,16 +27,16 @@ namespace ItemItem
             {
                 case 1:
                     FileReader.GetData(1);
-                    itemList = FileReader.GetItemList_New();
-                    Matrices.CreateMatrix.CalculateAverageRating_New();
-                    PrintMethods.Print2DArrayMatrix_New_BigData(PrintMethods.SetTableHeaderMatrix(headers, itemList), itemList);
+                    itemList = FileReader.GetItemList();
+                    AverageRating.CalculateAverageRating();
+                    PrintMethods.Print2DArrayMatrixBigData(PrintMethods.SetTableHeaderMatrix(headers, itemList), itemList);
                     Console.WriteLine("\n");
                     break;
                 case 2:
                     FileReader.GetData(2);
-                    itemList = FileReader.GetItemList_New();
-                    Matrices.CreateMatrix.CalculateAverageRating_New();
-                    PrintMethods.Print2DArrayMatrix_New(PrintMethods.SetTableHeaderMatrix(headers, itemList), itemList);
+                    itemList = FileReader.GetItemList();
+                    AverageRating.CalculateAverageRating();
+                    PrintMethods.Print2DArrayMatrix(PrintMethods.SetTableHeaderMatrix(headers, itemList), itemList);
                     Console.WriteLine("\n");
                     break;
                 default:
@@ -50,24 +48,21 @@ namespace ItemItem
             Console.WriteLine("Pick product and an user for new predicted rating");
             Console.WriteLine("Pick the userID");
             int userID = int.Parse(Console.ReadLine());
+
+
             Console.WriteLine("\n");
             Console.WriteLine("Pick the itemId ");
             int productID = int.Parse(Console.ReadLine());
             Console.WriteLine("\n");
+            if (choiceData == 1)
+            {
+                Console.WriteLine("Calculating prediction...");
+            }
             Cosinus.ACS(productID);
             Normalization.Normalize(userID);
 
-            //TODO print basic data info
-            if (choiceData == 2)
-            {
-                //PrintMethods.Print2DArrayDevMatrix(devMatrixS, PrintMethods.SetTableHeaderDevMatrix(null, itemList));
-                //PrintMethods.Print2DArrayDevMatrixUsers(devMatrixU, PrintMethods.SetTableHeaderDevMatrix(null, itemList));
-            }
-     
-            Console.WriteLine("Predicted result: " + Prediction.CalculatePrediction_New(userID,productID));
+            Console.WriteLine("Predicted result: " + Prediction.CalculatePrediction(userID,productID));
             Console.ReadLine();
-
-
         }
     }
 }
