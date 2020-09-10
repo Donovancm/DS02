@@ -9,7 +9,7 @@ namespace ItemItem
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Welcome to ItemItem Algorithm");
+            Console.WriteLine("ItemItem Algorithm");
             PickDesiredItem();
         }
         public static void PickDesiredItem()
@@ -19,7 +19,7 @@ namespace ItemItem
             var itemList = new double[0];
             var matrix = new double[0, 0];
             string[] headers = new string[] { "userid/itemid", "avg rating" };
-            Console.WriteLine("Pick a dataset, 1 for Advanced dataset and 2 for Basic dataset");
+            Console.WriteLine("Pick a dataset, 1 for Group Lens dataset and 2 for Basic dataset");
             int choiceData = int.Parse(Console.ReadLine());
             Console.WriteLine("\n");
 
@@ -29,7 +29,8 @@ namespace ItemItem
                     FileReader.GetData(1);
                     itemList = FileReader.GetItemList();
                     AverageRating.CalculateAverageRating();
-                    PrintMethods.Print2DArrayMatrixBigData(PrintMethods.SetTableHeaderMatrix(headers, itemList), itemList);
+                    PrintMethods.PrintGroupLens(PrintMethods.SetTableHeaderMatrix(headers, itemList), itemList);
+                    OneSlope.PredictRating(7, 103);
                     Console.WriteLine("\n");
                     break;
                 case 2:
@@ -37,6 +38,7 @@ namespace ItemItem
                     itemList = FileReader.GetItemList();
                     AverageRating.CalculateAverageRating();
                     PrintMethods.Print2DArrayMatrix(PrintMethods.SetTableHeaderMatrix(headers, itemList), itemList);
+                    OneSlope.PredictRating(7, 103);
                     Console.WriteLine("\n");
                     break;
                 default:
@@ -44,7 +46,6 @@ namespace ItemItem
                     Console.ReadLine();
                     break;
             }
-
             Console.WriteLine("Pick product and an user for new predicted rating");
             Console.WriteLine("Pick the userID");
             int userID = int.Parse(Console.ReadLine());

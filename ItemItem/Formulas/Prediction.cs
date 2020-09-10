@@ -12,13 +12,14 @@ namespace ItemItem.Formulas
         /// </summary>
         /// <param name="userID">Gewenste UserId</param>
         /// <param name="productID">Gewenste ProductId</param>
-        /// <returns>Een prediction in double</returns>
+        /// <returns>Predictionrating van een product</returns>
         public static double CalculatePrediction(int userID, int productID)
         {
             var prediction = 0.0;
             var userNormalizeRatings = Normalization.NormalizedDictionary[userID];
             double upper = 0.0;
             double lower = 0.0;
+
             foreach (var userRatings in userNormalizeRatings)
             {
                 double upperRn = userRatings.Item2; 

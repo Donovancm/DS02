@@ -12,7 +12,7 @@ namespace ItemItem
         /// </summary>
         /// <param name="tableHeaders">Headers</param>
         /// <param name="productIdList">Lijst van productId</param>
-        public static void Print2DArrayMatrixBigData(string[] tableHeaders, double[] productIdList)
+        public static void PrintGroupLens(string[] tableHeaders, double[] productIdList)
         {
             for (int a = 0; a < 2; a++)
             {

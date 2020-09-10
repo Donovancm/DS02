@@ -8,8 +8,25 @@ namespace ItemItem
 {
     class FileReader
     {
+        // item.key = userId, List<productId, rating>
+        // key = 1, List<(104,3.0),(106,5.0)> etc etc
         public static Dictionary<int, List<Tuple<int,double>>> DictionaryData = new Dictionary<int, List<Tuple<int, double>>>();
-        //voorbeeld data van opdracht
+
+        public static double[,] dataItem = new[,]
+{
+            {1, 103, 4.0 },
+            {1, 106, 3.0 },
+            {1, 109, 4.0 },
+
+            {2, 103, 5.0 },
+            {2, 106, 2.0 },
+
+            {3, 106, 3.5 },
+            {3, 109, 4.0 },
+
+            {4, 103, 5.0 },
+            {4, 109, 3.0 }
+        };
         public static double[,] data = new[,]
             {
             {1, 104, 3.0},
@@ -40,21 +57,32 @@ namespace ItemItem
             };
         //data nodig voor opdracht
         public static double[,] dataToor = new[,]
-            {
-            {1, 103, 4.0 },
-            {1, 106, 3.0},
-            {1, 109, 4.0 },
+        {
+            {1, 101, 5.0 },
+            {1, 102, 3.0 },
+            {1, 103, 2.5 },
 
-            {2, 103, 5.0},
-            {2, 106, 2.0 },
+            {2, 101, 2.0},
+            {2, 102, 2.5 },
+            {2, 103, 5.0 },
+            {2, 104, 2.0 },
 
-            {3, 106, 3.5},
-            {3, 109, 4.0 },
+            {3, 101, 2.5},
+            {3, 104, 4.0 },
+            {3, 105, 4.5 },
+            {3, 107, 5.0 },
 
-            {4, 103, 5.0},
-            {4, 109, 3.0 },
+            {4, 101, 5.0},
+            {4, 103, 3.0 },
+            {4, 104, 4.5 },
+            {4, 106, 4.0 },
 
-
+            {5, 101, 4.0 },
+            {5, 102, 3.0 },
+            {5, 103, 2.0 },
+            {5, 104, 4.0 },
+            {5, 105, 3.5 },
+            {5, 106, 4.0 }
             };
 
         public static void GetData(int dataChoice)
@@ -123,7 +151,7 @@ namespace ItemItem
         }
 
         /// <summary>
-        /// Pakt alle productlijsten
+        /// Pakt alle producten en zet het in een array
         /// </summary>
         /// <returns>een array van productId in double</returns>
         public static double[] GetItemList()
