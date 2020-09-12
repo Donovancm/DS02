@@ -17,31 +17,35 @@ namespace ItemItem
         public static void PickedOneSlope()
         {
             Console.WriteLine("Pick a desired User");
-            int choiceUserId = int.Parse(Console.ReadLine());
+            UserChoice.choiceUserId = int.Parse(Console.ReadLine());
             Console.WriteLine("Pick a desired Product");
-            int choiceProductId = int.Parse(Console.ReadLine());
-            OneSlope.PredictRating(choiceUserId, choiceProductId);
+            UserChoice.choiceProductId = int.Parse(Console.ReadLine());
+            if (UserChoice.choiceData == 1)
+            {
+                Console.WriteLine("Calculating prediction...");
+            }
+            OneSlope.PredictRating(UserChoice.choiceUserId, UserChoice.choiceProductId);
             Console.ReadLine();
         }
         public static void PickedACS()
         {
             Console.WriteLine("Pick product and an user for new predicted rating");
             Console.WriteLine("Pick the userID");
-            int userID = int.Parse(Console.ReadLine());
+            UserChoice.choiceUserId = int.Parse(Console.ReadLine());
 
 
             Console.WriteLine("\n");
             Console.WriteLine("Pick the itemId ");
-            int productID = int.Parse(Console.ReadLine());
+            UserChoice.choiceProductId = int.Parse(Console.ReadLine());
             Console.WriteLine("\n");
-            //if (FileReader.GetData(1))
-            //{
-            //    Console.WriteLine("Calculating prediction...");
-            //}
-            Cosinus.ACS(productID);
-            Normalization.Normalize(userID);
+            if (UserChoice.choiceData == 1)
+            {
+                Console.WriteLine("Calculating prediction...");
+            }
+            Cosinus.ACS(UserChoice.choiceProductId);
+            Normalization.Normalize(UserChoice.choiceUserId);
 
-            Console.WriteLine("Predicted result: " + Prediction.CalculatePrediction(userID, productID));
+            Console.WriteLine("Predicted result: " + Prediction.CalculatePrediction(UserChoice.choiceUserId, UserChoice.choiceProductId));
             Console.ReadLine();
 
         }
@@ -52,16 +56,17 @@ namespace ItemItem
             var itemList = new double[0];
             var matrix = new double[0, 0];
             string[] headers = new string[] { "userid/itemid", "avg rating" };
+            string[] headersOneSlope = new string[] { "userid/itemid" };
             Console.WriteLine("Pick a dataset, 1 for Group Lens dataset and 2 for Basic dataset");
-            int choiceData = int.Parse(Console.ReadLine());
+            UserChoice.choiceData = int.Parse(Console.ReadLine());
             Console.WriteLine("\n");
             Console.WriteLine("Pick a desired Algorithm: 1 for ACS and 2 for Oneslope");
-            int choiceAlgorithm = int.Parse(Console.ReadLine());
-            switch (choiceData)
+            UserChoice.choiceAlgorithm = int.Parse(Console.ReadLine());
+            switch (UserChoice.choiceData)
             {
                 case 1:
                     FileReader.GetData(1);
-                    if (choiceAlgorithm == 1)
+                    if (UserChoice.choiceAlgorithm == 1)
                     {
                         itemList = FileReader.GetItemList();
                         AverageRating.CalculateAverageRating();
@@ -78,16 +83,18 @@ namespace ItemItem
                     break;
                 case 2:
                     FileReader.GetData(2);
-                    if (choiceAlgorithm == 1)
+                    itemList = FileReader.GetItemList();
+                 
+                    if (UserChoice.choiceAlgorithm == 1)
                     {
-                        itemList = FileReader.GetItemList();
                         AverageRating.CalculateAverageRating();
-                        PrintMethods.PrintGroupLens(PrintMethods.SetTableHeaderMatrix(headers, itemList), itemList);
+                        PrintMethods.Print2DArrayMatrix(PrintMethods.SetTableHeaderMatrix(headers, itemList), itemList);
                         PickedACS();
                         Console.WriteLine("\n");
                     }
                     else
                     {
+                        PrintMethods.Print2DArrayMatrixPreOneSlope(PrintMethods.SetTableHeaderMatrix(headersOneSlope, itemList), itemList);
                         PickedOneSlope();
                         Console.WriteLine("\n");
                     }

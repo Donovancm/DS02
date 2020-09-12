@@ -37,25 +37,34 @@ namespace ItemItem.Formulas
         {
             var data = FileReader.DictionaryData;
             //gekozen product 103 + combinatie met die product 104/107/18/109
-                foreach (var productIdB in FileReader.GetItemList())
+            foreach (var productIdB in FileReader.GetItemList())
+            {
+                var productCombinationRating = FileReader.DictionaryData.Where(x => x.Value.Any(a => a.Item1 == userProductID) && x.Value.Any(b => b.Item1 == productIdB)).ToDictionary(d => d.Key, d => d.Value);
+                if (userProductID != productIdB && !CombinationExist((int)userProductID, (int)productIdB))
                 {
-                    var productCombinationRating = FileReader.DictionaryData.Where(x => x.Value.Any(a => a.Item1 == userProductID) && x.Value.Any(b => b.Item1 == productIdB)).ToDictionary(d => d.Key, d => d.Value);
-                    if (userProductID != productIdB && !CombinationExist((int)userProductID, (int)productIdB))
+                    if (productCombinationRating.Count != 0)
                     {
-                        if (productCombinationRating.Count != 0)
+                        Dictionary<int, List<Tuple<int, double>>> userList = FileReader.DictionaryData.Where(x => x.Value.Any(a => a.Item1 == userProductID) && x.Value.Any(b => b.Item1 == productIdB)).ToDictionary(d => d.Key, d => d.Value);
+                        Tuple<double, int> deviations;
+                        if (userProductID > productIdB)
                         {
-                            Dictionary<int, List<Tuple<int, double>>> userList = FileReader.DictionaryData.Where(x => x.Value.Any(a => a.Item1 == userProductID) && x.Value.Any(b => b.Item1 == productIdB)).ToDictionary(d => d.Key, d => d.Value);
-                            Tuple<double, int> deviations = CalculateDeviations((int)userProductID, (int)productIdB);
-                            if (DeviationDictionary.ContainsKey((int)userProductID))
-                            {
-                                DeviationDictionary[(int)userProductID].Add(new Tuple<int, double, int>((int)productIdB, deviations.Item1, deviations.Item2));
-                            }
-                            else
-                            {
-                                DeviationDictionary.Add((int)userProductID, new List<Tuple<int, double, int>>() { new Tuple<int, double, int>((int)productIdB, deviations.Item1, deviations.Item2) });
-                            }
+                           deviations = CalculateDeviations((int)productIdB, (int)userProductID);
+                        }
+                        else
+                        {
+                            deviations = CalculateDeviations( (int)userProductID, (int)productIdB);
+                        }
+                        
+                        if (DeviationDictionary.ContainsKey((int)userProductID))
+                        {
+                            DeviationDictionary[(int)userProductID].Add(new Tuple<int, double, int>((int)productIdB, deviations.Item1, deviations.Item2));
+                        }
+                        else
+                        {
+                            DeviationDictionary.Add((int)userProductID, new List<Tuple<int, double, int>>() { new Tuple<int, double, int>((int)productIdB, deviations.Item1, deviations.Item2) });
                         }
                     }
+                }
             }
         }
         public static Tuple<double, int> FindDeviations(int itemA, int itemB)
@@ -91,12 +100,12 @@ namespace ItemItem.Formulas
 
             }
             deviation = sum / dataFilter.Count();
-            Console.WriteLine("ItemA: " + itemA + " ItemB: " + itemB + " deviation: " + deviation + " NumberofUsers: " + dataFilter.Count());
+            //Console.WriteLine("ItemA: " + itemA + " ItemB: " + itemB + " deviation: " + deviation + " NumberofUsers: " + dataFilter.Count());
             return new Tuple<double, int>(deviation, dataFilter.Count());
         }
         public static double PredictRating(int userId, int productId)
         {
-           
+
             double upper = 0.0;
             double lower = 0.0;
 
@@ -113,11 +122,15 @@ namespace ItemItem.Formulas
                         DeviationDictionary.ContainsKey(productId) && DeviationDictionary[productId].Exists(x => x.Item1 == itemA))
                     {
                         Tuple<double, int> deviationsPair = FindDeviations(productId, userProduct.Item1);
-                        double deviation = deviationsPair.Item1;
+                        double deviation;
+                        if (itemA < productId)
+                        {
+                            deviation = -deviationsPair.Item1;
+                        } else { deviation = deviationsPair.Item1; };
                         int countUsers = deviationsPair.Item2;
                         if (deviation != 0 && countUsers > 0)
                         {
-                            upper += (userProduct.Item2 - deviation) * countUsers;
+                            upper += (userProduct.Item2 + deviation) * countUsers;
                             lower += countUsers;
                             //Console.WriteLine(userProduct.Item2 + deviation + countUsers);
                         }
@@ -125,7 +138,7 @@ namespace ItemItem.Formulas
                 }
             }
             double result = upper / lower;
-            Console.WriteLine(upper + lower);
+            //Console.WriteLine("Upper: " + upper + " Lower: " + lower);
             Console.WriteLine("Predicted Rating for User " + userId + " for the product " + productId + " is: " + result);
             return result;
         }

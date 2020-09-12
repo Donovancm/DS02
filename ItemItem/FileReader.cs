@@ -27,7 +27,7 @@ namespace ItemItem
             {4, 103, 5.0 },
             {4, 109, 3.0 }
         };
-        public static double[,] data = new[,]
+        public static double[,] dataACS = new[,]
             {
             {1, 104, 3.0},
             {1, 106, 5.0 },
@@ -101,6 +101,11 @@ namespace ItemItem
         public static void SetupBasicData()
         {
             var data = dataToor;
+            if (UserChoice.choiceAlgorithm == 1)
+            {
+                //ACS
+                data = dataACS;
+            }
             int rowLength = data.GetLength(0);
             int colLenght = data.GetLength(1);
 

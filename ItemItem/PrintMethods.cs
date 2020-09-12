@@ -67,6 +67,41 @@ namespace ItemItem
         }
 
         /// <summary>
+        /// Print voor basicData, de user, average rating, product ratings
+        /// </summary>
+        /// <param name="tableHeaders">Headers</param>
+        /// <param name="productIdList">Lijst van ProductId</param>
+        public static void Print2DArrayMatrixPreOneSlope(string[] tableHeaders, double[] productIdList)
+        {
+            for (int a = 0; a <= tableHeaders.Length - 1; a++)
+            {
+                Console.Write(tableHeaders[a] + "\t");
+
+            }
+            Console.Write("\n");
+            int[] userIDs = new List<int>(FileReader.DictionaryData.Keys).ToArray();
+            Array.Sort(userIDs);
+            foreach (var userID in userIDs)
+            {
+                Console.Write(userID + "\t");
+                foreach (var productID in productIdList)
+                {
+                    try
+                    {
+                        var userProduct = FileReader.DictionaryData[userID].Find(x => x.Item1 == productID);
+                        Console.Write("\t" + userProduct.Item2);
+                    }
+                    catch (NullReferenceException ex)
+                    {
+                        Console.Write("\t" + 0);
+                    }
+
+                }
+                Console.WriteLine();
+            }
+        }
+
+        /// <summary>
         /// Het instellen van headers
         /// </summary>
         /// <param name="names">Naam van extra kolom</param>
