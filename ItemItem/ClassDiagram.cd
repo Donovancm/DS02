@@ -31,22 +31,29 @@
   <Class Name="ItemItem.FileReader">
     <Position X="4" Y="0.5" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>BAAAAACAEAAAAAAAAAAIAAAAAACAAAAAAAAAAAAAAAg=</HashCode>
+      <HashCode>AAAAAACAEAAAAAAAAAAIAAAAAAKgAAAAABAAAAAAAAg=</HashCode>
       <FileName>FileReader.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ItemItem.PrintMethods">
     <Position X="0.5" Y="2.25" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAEAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAEAAIAAAEAAA=</HashCode>
       <FileName>PrintMethods.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ItemItem.Program">
     <Position X="0.5" Y="0.5" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <HashCode>AIAAABAAAAAAAAAAAAEAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
       <FileName>Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ItemItem.Formulas.OneSlope">
+    <Position X="4.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAACAAAAAAAAIAIBAAgBAAAE=</HashCode>
+      <FileName>Formulas\OneSlope.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />
