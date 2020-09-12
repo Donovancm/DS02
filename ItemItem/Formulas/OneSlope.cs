@@ -98,16 +98,14 @@ namespace ItemItem.Formulas
         {
            
             double upper = 0.0;
-            userId = 2;
-            productId = 2;
             double lower = 0.0;
+
             var userData = FileReader.DictionaryData;
             var data = FileReader.DictionaryData.Values;
             var productlistUser = FileReader.DictionaryData[userId];
             AddDeviations(productId);
             foreach (var userProduct in productlistUser)
             {
-                //List<Tuple<int, double>> productlistUser = userData[userId].Where(x => x.Item2 != 0).ToList();
                 if (productId != userProduct.Item1)
                 {
                     int itemA = userProduct.Item1;
@@ -121,11 +119,13 @@ namespace ItemItem.Formulas
                         {
                             upper += (userProduct.Item2 - deviation) * countUsers;
                             lower += countUsers;
+                            //Console.WriteLine(userProduct.Item2 + deviation + countUsers);
                         }
                     }
                 }
             }
             double result = upper / lower;
+            Console.WriteLine(upper + lower);
             Console.WriteLine("Predicted Rating for User " + userId + " for the product " + productId + " is: " + result);
             return result;
         }

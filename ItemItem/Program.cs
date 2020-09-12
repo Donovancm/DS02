@@ -11,6 +11,39 @@ namespace ItemItem
         {
             Console.WriteLine("ItemItem Algorithm");
             PickDesiredItem();
+            //PickDesiredAlgorithm();
+        }
+
+        public static void PickedOneSlope()
+        {
+            Console.WriteLine("Pick a desired User");
+            int choiceUserId = int.Parse(Console.ReadLine());
+            Console.WriteLine("Pick a desired Product");
+            int choiceProductId = int.Parse(Console.ReadLine());
+            OneSlope.PredictRating(choiceUserId, choiceProductId);
+            Console.ReadLine();
+        }
+        public static void PickedACS()
+        {
+            Console.WriteLine("Pick product and an user for new predicted rating");
+            Console.WriteLine("Pick the userID");
+            int userID = int.Parse(Console.ReadLine());
+
+
+            Console.WriteLine("\n");
+            Console.WriteLine("Pick the itemId ");
+            int productID = int.Parse(Console.ReadLine());
+            Console.WriteLine("\n");
+            //if (FileReader.GetData(1))
+            //{
+            //    Console.WriteLine("Calculating prediction...");
+            //}
+            Cosinus.ACS(productID);
+            Normalization.Normalize(userID);
+
+            Console.WriteLine("Predicted result: " + Prediction.CalculatePrediction(userID, productID));
+            Console.ReadLine();
+
         }
         public static void PickDesiredItem()
         {
@@ -22,23 +55,42 @@ namespace ItemItem
             Console.WriteLine("Pick a dataset, 1 for Group Lens dataset and 2 for Basic dataset");
             int choiceData = int.Parse(Console.ReadLine());
             Console.WriteLine("\n");
-
+            Console.WriteLine("Pick a desired Algorithm: 1 for ACS and 2 for Oneslope");
+            int choiceAlgorithm = int.Parse(Console.ReadLine());
             switch (choiceData)
             {
                 case 1:
                     FileReader.GetData(1);
-                    itemList = FileReader.GetItemList();
-                    AverageRating.CalculateAverageRating();
-                    PrintMethods.PrintGroupLens(PrintMethods.SetTableHeaderMatrix(headers, itemList), itemList);
-                    OneSlope.PredictRating(7, 103);
+                    if (choiceAlgorithm == 1)
+                    {
+                        itemList = FileReader.GetItemList();
+                        AverageRating.CalculateAverageRating();
+                        PrintMethods.PrintGroupLens(PrintMethods.SetTableHeaderMatrix(headers, itemList), itemList);
+                        PickedACS();
+                        Console.WriteLine("\n");
+                    }
+                    else
+                    {
+                        PickedOneSlope();
+                        Console.WriteLine("\n");
+                    }
                     Console.WriteLine("\n");
                     break;
                 case 2:
                     FileReader.GetData(2);
-                    itemList = FileReader.GetItemList();
-                    AverageRating.CalculateAverageRating();
-                    PrintMethods.Print2DArrayMatrix(PrintMethods.SetTableHeaderMatrix(headers, itemList), itemList);
-                    OneSlope.PredictRating(7, 103);
+                    if (choiceAlgorithm == 1)
+                    {
+                        itemList = FileReader.GetItemList();
+                        AverageRating.CalculateAverageRating();
+                        PrintMethods.PrintGroupLens(PrintMethods.SetTableHeaderMatrix(headers, itemList), itemList);
+                        PickedACS();
+                        Console.WriteLine("\n");
+                    }
+                    else
+                    {
+                        PickedOneSlope();
+                        Console.WriteLine("\n");
+                    }
                     Console.WriteLine("\n");
                     break;
                 default:
@@ -46,24 +98,24 @@ namespace ItemItem
                     Console.ReadLine();
                     break;
             }
-            Console.WriteLine("Pick product and an user for new predicted rating");
-            Console.WriteLine("Pick the userID");
-            int userID = int.Parse(Console.ReadLine());
+            //Console.WriteLine("Pick product and an user for new predicted rating");
+            //Console.WriteLine("Pick the userID");
+            //int userID = int.Parse(Console.ReadLine());
 
 
-            Console.WriteLine("\n");
-            Console.WriteLine("Pick the itemId ");
-            int productID = int.Parse(Console.ReadLine());
-            Console.WriteLine("\n");
-            if (choiceData == 1)
-            {
-                Console.WriteLine("Calculating prediction...");
-            }
-            Cosinus.ACS(productID);
-            Normalization.Normalize(userID);
+            //Console.WriteLine("\n");
+            //Console.WriteLine("Pick the itemId ");
+            //int productID = int.Parse(Console.ReadLine());
+            //Console.WriteLine("\n");
+            //if (choiceData == 1)
+            //{
+            //    Console.WriteLine("Calculating prediction...");
+            //}
+            //Cosinus.ACS(productID);
+            //Normalization.Normalize(userID);
 
-            Console.WriteLine("Predicted result: " + Prediction.CalculatePrediction(userID,productID));
-            Console.ReadLine();
+            //Console.WriteLine("Predicted result: " + Prediction.CalculatePrediction(userID,productID));
+            //Console.ReadLine();
         }
     }
 }
