@@ -128,7 +128,7 @@ namespace ItemItem.Formulas
                             deviation = -deviationsPair.Item1;
                         } else { deviation = deviationsPair.Item1; };
                         int countUsers = deviationsPair.Item2;
-                        if (deviation != 0 && countUsers > 0)
+                        if (countUsers > 0)
                         {
                             upper += (userProduct.Item2 + deviation) * countUsers;
                             lower += countUsers;

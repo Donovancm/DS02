@@ -31,7 +31,7 @@
   <Class Name="ItemItem.FileReader">
     <Position X="4" Y="0.5" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAAAAACAEAAAAAAAAAAIAAAAAAKgAAAAABAAAAAAAAg=</HashCode>
+      <HashCode>AAAAAACAEAAAAAAAAAAIAAAAAACgQAAAABAAAAAAAAg=</HashCode>
       <FileName>FileReader.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -54,6 +54,13 @@
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAACAAAAAAAAIAIBAAgBAAAE=</HashCode>
       <FileName>Formulas\OneSlope.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ItemItem.UserChoice">
+    <Position X="3" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAIAAAgAAAAQAAAAAAAAAAAAAAAACAA=</HashCode>
+      <FileName>UserChoice.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />

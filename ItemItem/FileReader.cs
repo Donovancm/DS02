@@ -56,7 +56,7 @@ namespace ItemItem
             {5, 109, 3.0 }
             };
         //data nodig voor opdracht
-        public static double[,] dataToor = new[,]
+        public static double[,] dataOneSlope = new[,]
         {
             {1, 101, 5.0 },
             {1, 102, 3.0 },
@@ -100,7 +100,7 @@ namespace ItemItem
 
         public static void SetupBasicData()
         {
-            var data = dataToor;
+            var data = dataOneSlope;
             if (UserChoice.choiceAlgorithm == 1)
             {
                 //ACS
