@@ -64,7 +64,7 @@ namespace ItemItem.Formulas
         /// <param name="userData">Gefilteerde data van users</param>
         /// <param name="itemA">ProductId A</param>
         /// <param name="itemB">ProductId B</param>
-        /// <returns></returns>
+        /// <returns>resultaat in double</returns>
         public static double CalculateACS(Dictionary<int, List<Tuple<int, double>>> userData, int itemA, int itemB)
         {
             double upper = 0.0;

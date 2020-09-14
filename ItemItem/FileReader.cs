@@ -10,10 +10,10 @@ namespace ItemItem
     {
         // item.key = userId, List<productId, rating>
         // key = 1, List<(104,3.0),(106,5.0)> etc etc
-        public static Dictionary<int, List<Tuple<int,double>>> DictionaryData = new Dictionary<int, List<Tuple<int, double>>>();
+        public static Dictionary<int, List<Tuple<int, double>>> DictionaryData = new Dictionary<int, List<Tuple<int, double>>>();
 
         public static double[,] dataItem = new[,]
-{
+        {
             {1, 103, 4.0 },
             {1, 106, 3.0 },
             {1, 109, 4.0 },
@@ -91,11 +91,12 @@ namespace ItemItem
             if (dataChoice == 2)
             {
                 SetupBasicData();
-            }else
+            }
+            else
             {
                 SetupAdvancedData();
             }
-            
+
         }
 
         public static void SetupBasicData()
@@ -133,7 +134,7 @@ namespace ItemItem
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
-                    list.Add(line); 
+                    list.Add(line);
                 }
             }
 

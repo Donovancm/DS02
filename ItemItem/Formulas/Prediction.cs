@@ -27,6 +27,7 @@ namespace ItemItem.Formulas
                 lower += Math.Abs(sim);
                 upper += (upperRn * sim);
             }
+
             prediction = upper / lower;
             int maxRating = (int)FileReader.DictionaryData[userID].Select(x => x.Item2).Max();
             int minRating = (int)FileReader.DictionaryData[userID].Select(x => x.Item2).Min();

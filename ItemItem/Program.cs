@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace ItemItem
 {
@@ -11,20 +12,26 @@ namespace ItemItem
         {
             Console.WriteLine("ItemItem Algorithm");
             PickDesiredItem();
-            //PickDesiredAlgorithm();
         }
 
         public static void PickedOneSlope()
         {
             Console.WriteLine("Pick a desired User");
             UserChoice.choiceUserId = int.Parse(Console.ReadLine());
-            Console.WriteLine("Pick a desired Product");
-            UserChoice.choiceProductId = int.Parse(Console.ReadLine());
+
             if (UserChoice.choiceData == 1)
             {
                 Console.WriteLine("Calculating prediction...");
             }
-            OneSlope.PredictRating(UserChoice.choiceUserId, UserChoice.choiceProductId);
+            List<int> ratedProduct = FileReader.DictionaryData[UserChoice.choiceUserId].Select(x => x.Item1).ToList();
+            ratedProduct.Sort();
+            foreach (var productId in FileReader.GetItemList())
+            {
+                if (!ratedProduct.Contains((int)productId))
+                {
+                    OneSlope.PredictRating(UserChoice.choiceUserId, (int)productId);
+                }
+            }
             Console.ReadLine();
         }
         public static void PickedACS()
@@ -33,26 +40,28 @@ namespace ItemItem
             Console.WriteLine("Pick the userID");
             UserChoice.choiceUserId = int.Parse(Console.ReadLine());
 
+            Console.WriteLine("1: for specific product or 2: show all predictions");
+            int choiceOption = int.Parse(Console.ReadLine());
 
-            Console.WriteLine("\n");
-            Console.WriteLine("Pick the itemId ");
-            UserChoice.choiceProductId = int.Parse(Console.ReadLine());
-            Console.WriteLine("\n");
-            if (UserChoice.choiceData == 1)
+            List<int> ratedProduct = FileReader.DictionaryData[UserChoice.choiceUserId].Select(x => x.Item1).ToList();
+            ratedProduct.Sort();
+            foreach (var productId in FileReader.GetItemList())
             {
-                Console.WriteLine("Calculating prediction...");
+                if (!ratedProduct.Contains((int)productId))
+                {
+                    Cosinus.ACS((int)productId);
+                    if (Normalization.NormalizedDictionary.Count() == 0)
+                    {
+                        Normalization.Normalize(UserChoice.choiceUserId);
+                    }
+                    Console.WriteLine("Predicted result for productId: " + productId + " predicted rating is " + Prediction.CalculatePrediction(UserChoice.choiceUserId, (int)productId));
+                }
             }
-            Cosinus.ACS(UserChoice.choiceProductId);
-            Normalization.Normalize(UserChoice.choiceUserId);
-
-            Console.WriteLine("Predicted result: " + Prediction.CalculatePrediction(UserChoice.choiceUserId, UserChoice.choiceProductId));
             Console.ReadLine();
 
         }
         public static void PickDesiredItem()
         {
-            Dictionary<int, List<Tuple<int, double>>> dictionaryBasic = new Dictionary<int, List<Tuple<int, double>>>();
-            Dictionary<int, double[,]> dictionaryAdvanced = new Dictionary<int, double[,]>();
             var itemList = new double[0];
             var matrix = new double[0, 0];
             string[] headers = new string[] { "userid/itemid", "avg rating" };
@@ -84,7 +93,7 @@ namespace ItemItem
                 case 2:
                     FileReader.GetData(2);
                     itemList = FileReader.GetItemList();
-                 
+
                     if (UserChoice.choiceAlgorithm == 1)
                     {
                         AverageRating.CalculateAverageRating();
@@ -105,24 +114,6 @@ namespace ItemItem
                     Console.ReadLine();
                     break;
             }
-            //Console.WriteLine("Pick product and an user for new predicted rating");
-            //Console.WriteLine("Pick the userID");
-            //int userID = int.Parse(Console.ReadLine());
-
-
-            //Console.WriteLine("\n");
-            //Console.WriteLine("Pick the itemId ");
-            //int productID = int.Parse(Console.ReadLine());
-            //Console.WriteLine("\n");
-            //if (choiceData == 1)
-            //{
-            //    Console.WriteLine("Calculating prediction...");
-            //}
-            //Cosinus.ACS(productID);
-            //Normalization.Normalize(userID);
-
-            //Console.WriteLine("Predicted result: " + Prediction.CalculatePrediction(userID,productID));
-            //Console.ReadLine();
         }
     }
 }

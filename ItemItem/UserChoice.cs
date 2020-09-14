@@ -10,6 +10,5 @@ namespace ItemItem
         public static int choiceData { get; set; }
         public static int choiceAlgorithm { get; set; }
         public static int choiceUserId { get; set; }
-        public static int choiceProductId { get; set; }
     }
 }

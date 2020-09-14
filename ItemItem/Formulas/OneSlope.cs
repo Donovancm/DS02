@@ -33,10 +33,14 @@ namespace ItemItem.Formulas
             }
             return result;
         }
+        /// <summary>
+        ///  Voegt de deviation combinatie toe.
+        /// </summary>
+        /// <param name="userProductID">Gekozen userProductId</param>
         public static void AddDeviations(int userProductID)
         {
             var data = FileReader.DictionaryData;
-            //gekozen product 103 + combinatie met die product 104/107/18/109
+            //bv: gekozen product 103 + combinatie met alle andere producten 
             foreach (var productIdB in FileReader.GetItemList())
             {
                 var productCombinationRating = FileReader.DictionaryData.Where(x => x.Value.Any(a => a.Item1 == userProductID) && x.Value.Any(b => b.Item1 == productIdB)).ToDictionary(d => d.Key, d => d.Value);
@@ -67,6 +71,12 @@ namespace ItemItem.Formulas
                 }
             }
         }
+        /// <summary>
+        /// Zoekt de deviation value van productA en productB
+        /// </summary>
+        /// <param name="itemA">ProductIdA</param>
+        /// <param name="itemB">ProductIdB</param>
+        /// <returns>deviationwaarde en UserAmount </returns>
         public static Tuple<double, int> FindDeviations(int itemA, int itemB)
         {
             if (DeviationDictionary.ContainsKey(itemA) && DeviationDictionary[itemA].Exists(x => x.Item1 == itemB))
@@ -79,6 +89,12 @@ namespace ItemItem.Formulas
             return new Tuple<double, int>(deviationB.Item2, deviationB.Item3);
         }
 
+        /// <summary>
+        /// Berekening van deviationpairs
+        /// </summary>
+        /// <param name="itemA">ProductIdA</param>
+        /// <param name="itemB">ProductIdB</param>
+        /// <returns>deviationwaarde en UserAmount</returns>
         public static Tuple<double, int> CalculateDeviations(int itemA, int itemB)
         {
             double sum = 0.0;
@@ -100,10 +116,14 @@ namespace ItemItem.Formulas
 
             }
             deviation = sum / dataFilter.Count();
-            //Console.WriteLine("ItemA: " + itemA + " ItemB: " + itemB + " deviation: " + deviation + " NumberofUsers: " + dataFilter.Count());
             return new Tuple<double, int>(deviation, dataFilter.Count());
         }
-        public static double PredictRating(int userId, int productId)
+        /// <summary>
+        /// Berekent de prediction van User op een product
+        /// </summary>
+        /// <param name="userId">Gekozen UserId</param>
+        /// <param name="productId">Geselecteerde productId</param>
+        public static void PredictRating(int userId, int productId)
         {
 
             double upper = 0.0;
@@ -123,24 +143,26 @@ namespace ItemItem.Formulas
                     {
                         Tuple<double, int> deviationsPair = FindDeviations(productId, userProduct.Item1);
                         double deviation;
+
                         if (itemA < productId)
                         {
                             deviation = -deviationsPair.Item1;
-                        } else { deviation = deviationsPair.Item1; };
+                        }
+                        else
+                        {
+                            deviation = deviationsPair.Item1;
+                        };
                         int countUsers = deviationsPair.Item2;
                         if (countUsers > 0)
                         {
                             upper += (userProduct.Item2 + deviation) * countUsers;
                             lower += countUsers;
-                            //Console.WriteLine(userProduct.Item2 + deviation + countUsers);
                         }
                     }
                 }
             }
             double result = upper / lower;
-            //Console.WriteLine("Upper: " + upper + " Lower: " + lower);
             Console.WriteLine("Predicted Rating for User " + userId + " for the product " + productId + " is: " + result);
-            return result;
         }
     }
 }
