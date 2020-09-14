@@ -32,6 +32,26 @@ namespace ItemItem.Formulas
             }
             return result;
         }
+        /// <summary>
+        ///  Pakt de gewenste productId en combinatie met een andere productId
+        /// </summary>
+        /// <param name="productID">Gewenste ProductId</param>
+        /// <param name="item1">Andere productId</param>
+        /// <returns>Similarity in double</returns>
+        public static double GetSimilarityValue(int productID, int item1)
+        {
+            double similarity = 0.0;
+            if (SimilarityDictionary.ContainsKey(productID) && SimilarityDictionary[productID].Any(x => x.Item1 == item1))
+            {
+                similarity = SimilarityDictionary[productID].Find(x => x.Item1 == item1).Item2;
+            }
+            else
+            {
+                similarity = SimilarityDictionary[item1].Find(x => x.Item1 == productID).Item2;
+            }
+            return similarity;
+        }
+
 
         /// <summary>
         ///  Het toevoegen van Similarity door ACS 
@@ -82,14 +102,14 @@ namespace ItemItem.Formulas
             {
                 // (Prod)
                 double userAgvRating = AverageRating.AverageRatingDictionary[user.Key];
-                lowerProductARating += Math.Pow((user.Value.Find(x => x.Item1 == itemA).Item2 - userAgvRating),2);
+                lowerProductARating += Math.Pow((user.Value.Find(x => x.Item1 == itemA).Item2 - userAgvRating), 2);
             }
 
             foreach (var user in userData)
             {
                 // (Prod)
                 double userAgvRating = AverageRating.AverageRatingDictionary[user.Key];
-                lowerProductBRating += Math.Pow((user.Value.Find(x => x.Item1 == itemB).Item2 - userAgvRating),2);
+                lowerProductBRating += Math.Pow((user.Value.Find(x => x.Item1 == itemB).Item2 - userAgvRating), 2);
             }
             var result = (upper / (Math.Sqrt(lowerProductARating) * Math.Sqrt(lowerProductBRating)));
             return result;

@@ -40,9 +40,6 @@ namespace ItemItem
             Console.WriteLine("Pick the userID");
             UserChoice.choiceUserId = int.Parse(Console.ReadLine());
 
-            Console.WriteLine("1: for specific product or 2: show all predictions");
-            int choiceOption = int.Parse(Console.ReadLine());
-
             List<int> ratedProduct = FileReader.DictionaryData[UserChoice.choiceUserId].Select(x => x.Item1).ToList();
             ratedProduct.Sort();
             foreach (var productId in FileReader.GetItemList())

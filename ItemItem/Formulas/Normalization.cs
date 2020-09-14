@@ -34,5 +34,23 @@ namespace ItemItem.Formulas
                 }
             }
         }
+        public static double DeNormalize(int userID, int productID)
+        {
+            double deNormalizedRating = 0.0;
+            var userNormalizeRatings = Normalization.NormalizedDictionary[userID];
+            double upper = 0.0;
+            double lower = 0.0;
+
+            foreach (var userRatings in userNormalizeRatings)
+            {
+                double upperRn = userRatings.Item2;
+                double sim = Cosinus.GetSimilarityValue(productID, userRatings.Item1);
+                lower += Math.Abs(sim);
+                upper += (upperRn * sim);
+            }
+
+            deNormalizedRating = upper / lower;
+            return deNormalizedRating;
+        }
     }
 }
